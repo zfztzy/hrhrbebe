@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden;color:#333}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:30px;margin-bottom:5px}.markdown-body h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:18px;padding-bottom:0}.markdown-body h4{font-size:16px}.markdown-body h5{font-size:15px}.markdown-body h6{margin-top:5px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style>
+            <p>给定一个非负整数，你至多可以交换一次数字中的任意两位。返回你能得到的最大值。</p>
+            <p>示例 1 :</p>
+            <pre><code>
+输入: 2736
+输出: 7236
+解释: 交换数字2和数字7。
+            </code></pre>
+            <p>示例 2 :</p>
+            <pre><code>
+输入: 9973
+输出: 9973
+解释: 不需要交换。
+            </code></pre>
+            <p>注意:</p>
+            <p>给定数字的范围是 [0, 10^8]</p>
+            <p>题目链接<a href="https://leetcode-cn.com/problems/maximum-swap/comments/" target="_blank" rel="nofollow noopener noreferrer">https://leetcode-cn.com/problems/maximum-swap/comments/</a></p>
+            <h2 id="one">题目分析</h2>
+            <p>这次就不用分析了吧，题目说的很清楚，就是只调换一个数，让这个数变得最大</p>
+            <h2>考虑做法</h2>
+            <p>目前想到的就只有两种方法</p>
+            <h4>一、</h4>
+            <p>因为最大就是个<code>10^8</code>的9位数，所以不考虑他，就只有8位数可以考虑</p>
+            <p>因为每次只能调换一个那么8位数的时候最多也就只有28种,for循环遍历一下，然后加到列表里，sort排序一下，取最后一个。我们硬写一个暴力解法也不会超出内存。但是今天有点想偷懒，就不写了。</p>
+            <h4>二、</h4>
+            <p>我们可以先想一个问题，就是这个数把数字重新组合最大的数是多少。</p>
+            <p>举个例子：</p>
+            <pre><code>
+假设这个数是2736
+重新组合最大的数就是7236
+我们用2736和7236从最大一位开始对比
+第一位是2和7，那么我们就知道对于第，一个数把7放到第一位就是最大
+
+再举个例子987789
+重新组合最大的数是998877
+第一位是9和9，第二位是8和9，我们就可以把9放到第2位就获得了最大的数，当然我们不能用最前面的9，要从最后面找最小的9换到第二位才行
+            </code></pre>
+            <p>那么代码要怎么实现呢</p>
+            <h2 id="two">解法一</h2>
+            <p>这个方法不想写，留个空心情好的时候补上，厉害的兄弟姐妹们可以试试</p>
+            <h2 id="three">解法二</h2>
+            <pre><code>
+class Solution(object):
+    def maximumSwap(self, num):
+        """
+        :type num: int
+        :rtype: int
+        """
+        a = 0
+        b = ''
+        numList = list(str(num))# 首先为了方便操作，把这个数转成字符串，再拆成列表
+        copyList = [] # 为了不操作到原有的列表，创建一个深拷贝列表
+        for i in numList:
+            copyList.append(i)
+        copyList.sort() # 拷贝后，对拷贝的列表排序，获得一个最小的数
+        copyList = copyList[::-1] # 最小的数倒序，就是最大的数
+        if copyList==numList: # 如果这个就是最大的，就不用操作了
+            return num
+        for i in range(len(numList)):
+            if numList[i] != copyList[i]: # 开始从高位往低位对比，看第几位开始不一样
+                b = numList[i]
+                numList[i] = copyList[i] # 把高位的数换成大，需要放到低位的数用个变量先存一下
+                numList = numList[::-1]
+                for aa in range(len(numList)): # 把数组倒序一下，从低位开始找最低位的需要交换到高位的数
+                    if numList[aa] == copyList[i]:
+                        numList[aa]=b
+                        for i in range(len(numList)): # 把列表重新生成新的数提交
+                            a = a + int(numList[i])*10**i
+                        return a
+            </code></pre>
+<style>.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style></div>
+</body>
+</html>

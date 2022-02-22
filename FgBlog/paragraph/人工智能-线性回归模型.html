@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="markdown-body"><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden;color:#333}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:30px;margin-bottom:5px}.markdown-body h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:18px;padding-bottom:0}.markdown-body h4{font-size:16px}.markdown-body h5{font-size:15px}.markdown-body h6{margin-top:5px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style>
+            <h1>线性回归</h1>
+            <h2 id="one">先来一个问题</h2>
+            <p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/488d87e16e4d477a901c2e8655802a63~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p>求的一个合理的<code>y = ax + b</code></p>
+            <p>就要找到⬇️⬇️⬇️⬇️⬇️⬇️</p>
+            <p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8920927d29bb4a50b20663607c18431b~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p>⬆️⬆️⬆️⬆️⬆️⬆️损失函数的最小值</p>
+            <p>好，我们就可以再复习一次，最小二乘法的推倒。前面<code>人工智能必备数学知识-线性回归</code>里有，这是数学的方法。那么在人工智能里机器学习里用什么方法呢</p>
+            <h2 id="two">梯度下降法</h2>
+            <h3>再来个问题</h3>
+            <p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5f987b0f34494c7da5c00795528500f2~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3b78c3ae0ab04a50aeacdb8d3d982cf9~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <h4>理解一下</h4>
+            <p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9faabe6dfd664185b1008589ad7e73b7~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2730fbb03e3e4634b5adda8f41d9c0c5~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <h5>这是个循环</h5>
+            <p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/231c681eea384409af37ba29e42f60f9~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p>每次根据一定的步长，去找下一个点的斜率，一直到收敛</p>
+            <h2 id="three">机器学习处理问题实战</h2>
+            <p>那么先来看看机器学习问题的基本流程</p>
+            <p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b62a56fd5834a5d88840f16845f10c1~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <h3>第一题</h3>
+            <p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1bc882903814df7b64bb0eb716fdaf8~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p>单因子房价预测</p>
+            <pre><code>
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+
+# 数据加载
+# import pandas as pd
+
+data = pd.read_csv('task1_data.csv')
+data.head()
+print(type(data))
+
+# x,y赋值
+
+x = data.loc[:, '面积']
+x.head()
+y = data.loc[:, '房价']
+y.head()
+
+# 数据可视化
+# from matplotlib import pyplot as plt
+
+fig1 = plt.figure()
+plt.scatter(x, y)
+plt.show()
+
+# 数据预处理
+
+print(type(x))
+x = np.array(x)
+print(type(x), x.shape)
+
+y = np.array(y)
+
+# 维度转化
+# import numpy as np
+x = x.reshape(-1, 1)
+print(type(x), x.shape)
+
+y = y.reshape(-1, 1)
+
+# 简历模型
+
+model = LinearRegression()
+
+print(model)
+
+# 模型训练
+# from sklearn.linear_model import LinearRegression
+
+model.fit(x, y)
+
+# 获取线性回归模型的参数 a,b
+
+
+a = model.coef_
+b = model.intercept_
+
+print(a, b)
+
+# 预测结果对比
+
+y_predict = a * x + b
+print(type(y_predict), y_predict)
+y_predict2 = model.predict(x)
+print(y_predict2 == y_predict)
+
+# 数据预测
+
+# 测试样本x_test = 100，计算y
+
+x_test = np.array([100])
+x_test = x_test.reshape(-1, 1)
+y_test_predict = model.predict(x_test)
+
+print(y_test_predict)
+
+# 数据可视化
+
+fig2 = plt.figure()
+plt.scatter(x, y)
+plt.plot(x, y_predict, label='y_predict')
+plt.xlabel('size(x)')
+plt.ylabel('price(y)')
+plt.legend()
+plt.show()
+
+# 模型评估
+
+# from sklearn.metrics import mean_squared_error, r2_score
+
+MSE = mean_squared_error(y, y_predict)
+
+R2 = r2_score(y, y_predict)
+
+print(MSE)
+print(R2)  
+            </code></pre>
+            <h3>第二题</h3>
+            <p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa47b90d4dc44de8a9e8befd195a5ebe~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <p>多因子房价预测</p>
+            <pre><code>
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# 数据加载
+# import pandas as pd
+
+data = pd.read_csv('task2_data.csv')
+data.head()
+
+# 数据赋值及可视化
+# form matplotlib import pyplot as plt
+
+fig = plt.figure(figsize=(20, 5))
+fig1 = plt.subplot(131)
+plt.scatter(data.loc[:, '面积'], data.loc[:, '价格'], )
+plt.title('Price VS Size')
+fig2 = plt.subplot(132)
+plt.scatter(data.loc[:, '人均收入'], data.loc[:, '价格'], )
+plt.title('Price VS Income')
+fig3 = plt.subplot(133)
+plt.scatter(data.loc[:, '平均房龄'], data.loc[:, '价格'], )
+plt.title('Price VS House_age')
+plt.show()
+
+# 面积价格单因子模型
+
+# x, y赋值
+
+x = data.loc[:, '面积']
+y = data.loc[:, '价格']
+x.head()
+y.head()
+
+# 数据预处理
+# import numpy as np
+
+x = np.array(x).reshape(-1, 1)
+y = np.array(y).reshape(-1, 1)
+print(x.shape, y.shape)
+
+
+# 建立模型
+# from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+
+# 训练模型
+
+model.fit(x, y)
+
+
+a = model.coef_
+b = model.intercept_
+
+print(a, b)
+
+
+# 建立预测数据
+y_predict = model.predict(x)
+print(y_predict)
+
+
+# 数据可视化
+
+fig4 = plt.figure()
+plt.scatter(x, y)
+plt.plot(x, y_predict, 'r')
+plt.show()
+
+
+# 模型评估
+# from sklearn.metrics import mean_squared_error, r2_score
+
+MSE = mean_squared_error(y, y_predict)
+R2 = r2_score(y, y_predict)
+
+print(MSE)
+print(R2)
+
+
+
+# 简历多因子模型
+
+# x,y 赋值
+y = y
+x = data.drop(['价格'], axis=1)
+x.head()
+print(x.shape)
+
+
+# 建立模型
+model_multi = LinearRegression()
+
+# 训练模型
+model_multi.fit(x, y)
+
+# 建立预测数据
+y_predict_multi = model_multi.predict(x)
+
+
+# 模型评估
+
+MSE = mean_squared_error(y, y_predict)
+R2 = r2_score(y, y_predict)
+
+print(MSE)
+print(R2)
+
+
+# 数据可视化
+
+# 三维x不好可视化，对比两次的y
+fig5 = plt.figure()
+plt.scatter(y, y_predict_multi)
+
+plt.xlabel('real price(y)')
+plt.ylabel('predicted price(x)')
+plt.show()
+
+# 对比单因子的，y，y_predict对比
+fig6 = plt.figure()
+plt.scatter(y, y_predict)
+plt.xlabel('real price(y)')
+plt.ylabel('predicted price(x)')
+plt.show()
+
+
+# 数据预测
+
+x_test = np.array([160, 70000, 5]).reshape(1, -1)
+print(x_test)
+print(x_test.shape)
+y_test_predict = model_multi.predict(x_test)
+print(y_test_predict)
+
+            
+            </code></pre>
+<style>.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style></div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<head>
+  <link rel="stylesheet" href='../static/style/test.css'>
+  <link href="../static/style/ionic.css" rel="stylesheet">
+  <script src="../static/js/ionic.bundle.min.js"></script>
+  <script src="../static/js/jquery.min.js"></script>
+  <script src="../static/js/base.js"></script>
+  <meta charset="UTF-8">
+  <title>HtTest</title>
+  <style type="text/css">
+      html {
+          height: 100%;
+          width: 100%;
+        overflow: auto;
+      }
+  </style>
+</head>
+
+
+
+<body>
+<div class="header">
+  <h1 style="color: white">HtTest</h1>
+  <p>这里放一个使用说明</p>
+</div>
+
+<div class="navbar">
+  <a onclick="func1()" type="button">功能1</a>
+  <a onclick="func2()" type="button">功能2</a>
+  <a onclick="func3()" type="button">功能3</a>
+  <a onclick="func4()" type="button" class="right">功能4</a>
+</div>
+
+<div class="row">
+  <div class="main">
+      <h2 id="NameMain">主功能名称</h2>
+      <label class="checkbox"onclick="boxAllClick()"><input type="checkbox" id="boxAll" >全选</label>
+      <h6></h6>
+      <ul>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box0">注册用户</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box1">华泰普通员工</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box2">华泰服务经理</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box3">销交</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box4">网金</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box5">投行（债券）</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box6">投行（股权）</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box7">金控</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box8">机构销售</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box9">研究院</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box10">白名单</label></li>
+        <li><label class="checkbox" style="width: 105px;"><input type="checkbox" id="box11">签约用户</label></li>
+      </ul>
+      <h2></h2>
+      <button id="ButtonMain" class="yongyin" style="width:300px; height:30px;">主功能按键以后再改样式</button>
+      <div class="fakeimg" style="height:200px;" id="MainMsg">主功能返回内容</div>
+      <p>备用内容..</p>
+      <p>备用内容</p>
+      <br>
+      <h2>备用内容</h2>
+      <h5>备用内容</h5>
+      <div class="fakeimg" style="height:200px;">图像</div>
+      <p>备用内容..</p>
+      <p>备用内容</p>
+  </div>
+</div>
+
+<div class="footer">
+  <h2>补充说明</h2>
+</div>
+
+</body>
+</html>

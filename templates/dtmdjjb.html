@@ -1,0 +1,175 @@
+<div>
+<div class="markdown-body"><!--170687805--><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden;color:#333}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:30px;margin-bottom:5px}.markdown-body h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:18px;padding-bottom:0}.markdown-body h4{font-size:16px}.markdown-body h5{font-size:15px}.markdown-body h6{margin-top:5px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><h1>锚点的基本实现方法</h1>
+<h2>1、通过a标签直接跳转</h2>
+<p>在p标签里增加 id</p>
+<p><code>&lt;p id = 'jumpto'&gt;我要跳转到这里&lt;/p&gt;</code></p>
+<p>然后用一个a标签href 绑定这个id</p>
+<p><code>&lt;a href = '#jumpto'&gt;点击这里就能跳转到id的位置&lt;/a&gt;</code></p>
+<p>写一个能测试的html，是长这个样子</p>
+<pre><code>&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;a href = '#jumpto'&gt;点击这里就能跳转到id的位置&lt;/a&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;p id = 'jumpto'&gt;大概能跳到这里&lt;/p&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+</code></pre>
+<p>但是呢，这样做有个硬伤就是跳转的时候就直接闪到目标的位置，就很丑</p>
+<h2>2、通过querySelector找到DOM用scrollIntoView方法跳转</h2>
+<p>还是那个p标签，还是那个id</p>
+<p><code>&lt;p id = 'jumpto'&gt;我要跳转到这里&lt;/p&gt;</code></p>
+<p>然后用一个js，querySelector 找到这个id</p>
+<p><code>const jump = document.querySelector('#jumpto'); </code></p>
+<p>然后用这个jump的scrollIntoView方法跳转</p>
+<p><code>jump.scrollIntoView();</code></p>
+<p>写一个能测试的html，是长这个样子</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;button onclick=jumpjump()&gt;点击这里开始跳转&lt;/button&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;p id = 'jumpto'&gt;大概能跳到这里&lt;/p&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;/body&gt;
+
+&lt;script&gt;
+    function jumpjump(){
+        const jump = document.querySelector('#jumpto'); 
+        jump.scrollIntoView();
+    }
+&lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+<p>如果有人复制了这个下去进行测试就会问了，这不也是一样很突兀吗</p>
+<p>所以我们就要用到这个scrollIntoView里的属性了，先来介绍一下</p>
+<h3>1、behavior</h3>
+<p>这个属性他有这几种用法</p>
+<p><code>jump.scrollIntoView({behavior:"auto"});</code>这种是默认的就是一下子跳过去</p>
+<p><code>jump.scrollIntoView({behavior:"instant"});</code>
+instant这个单词是什么意思知道吗，瞬间！对他就是跟第一种方法是一样的，我也不知道为什么要弄两个同样效果的属性</p>
+<p><code>jump.scrollIntoView({behavior:"smooth"});</code>那么剩下这个就是，有滚动动画的效果</p>
+<h3>2、block</h3>
+<p><code>jump.scrollIntoView({block:"start"});</code>这种是跳转把跳转的目标放到屏幕的顶部</p>
+<p><code>jump.scrollIntoView({block:"center"});</code>这种是跳转把跳转的目标放到屏幕的中间</p>
+<p><code>jump.scrollIntoView({block:"end"});</code>这种是跳转把跳转的目标放到屏幕的底部</p>
+<p><code>jump.scrollIntoView({block:"nearest"});</code>说实话不太懂怎么用</p>
+<h3>3、inline</h3>
+<p>这个也是有上面的四个属性，但是说实话还是不太懂怎么用。所以这也也不细说了。</p>
+<h3>下面是测试用代码</h3>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p id = 'top'&gt;&lt;/p&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;button onclick=jumpMeiDongHua()&gt;点击这里没动画跳转&lt;/button&gt;&lt;br&gt;
+&lt;button onclick=jumpYouDongHua()&gt;点击这里有动画跳转&lt;/button&gt;&lt;br&gt;
+&lt;button onclick=jumpStart()&gt;点击这里跳转，目标显示在顶上&lt;/button&gt;&lt;br&gt;
+&lt;button onclick=jumpCenter()&gt;点击这里跳转，目标显示在中间&lt;/button&gt;&lt;br&gt;
+&lt;button onclick=jumpEnd()&gt;点击这里跳转，目标显示在底部&lt;/button&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;button onclick=jumpTop()&gt;返回顶部&lt;/button&gt;
+&lt;p id = 'jumpto'&gt;大概能跳到这里&lt;/p&gt;
+&lt;button onclick=jumpTop()&gt;返回顶部&lt;/button&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;/body&gt;
+
+&lt;script&gt;
+    // 没动画的跳转方法
+    function jumpMeiDongHua(){
+        const jump = document.querySelector('#jumpto'); 
+        jump.scrollIntoView();
+    }
+    // 有动画的跳转方法
+    function jumpYouDongHua(){
+        const jump = document.querySelector('#jumpto'); 
+        jump.scrollIntoView({behavior:"smooth"});
+    }
+    // 跳转，目标显示在顶上的方法
+    function jumpStart(){
+        const jump = document.querySelector('#jumpto'); 
+        jump.scrollIntoView({block: "start"});
+    }
+    // 跳转，目标显示在中间的方法
+    function jumpCenter(){
+        const jump = document.querySelector('#jumpto'); 
+        jump.scrollIntoView({block: "center"});
+    }
+    // 跳转，目标显示在底部的方法
+    function jumpEnd(){
+        const jump = document.querySelector('#jumpto'); 
+        jump.scrollIntoView({block: "end"});
+    }
+    // 返回顶部的方法
+    function jumpTop(){
+        const jump = document.querySelector('#top'); 
+        jump.scrollIntoView({block: "center",inline: "end"});
+    }
+
+&lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+<h1>动态锚点的实现方法</h1>
+<p>那么锚点知道怎么做了，接下来就是要做动态锚点了</p>
+<p>首先解释一下是什么个意思</p>
+<p>就是你文章嘛不是有个标题目录嘛，然后呢把这个目录放在文章的旁边，你一点它就跳转啦。这个时候你就需要啥呀，需要一个高亮在目录上显示你跳到哪了。然后呢再通过你的上下滚动到下个目录，这个高亮自然就会跟过去在下一个目录高亮。呐这个就是动态锚点了。还不能理解你就看看👈左边，如果你是在掘金上看的就看看👉右边，对这个目录就是动态锚点做的。</p>
+<h2>这个先说我的一开始的做法</h2>
+<p>一开始，我是以网页被卷去的高：<code>document.documentElement.scrollTop</code>作为判断
+如果大于这个，小于那个，页面就激活哪个样式。大于另一个这个，小于另一个那个，激活另一个样式</p>
+<h4>但是呢这样就会有个问题：</h4>
+<p>如果页面比例一样就会出现滚动了多少，和你一开始写在代码里做判断的对不上。</p>
+<h4>那怎么办呢：</h4>
+<p>一开始，我是想先获取整个页面的高度，然后把高度乘上比例，去做判断，但是我想了想好像好麻烦，我又想了就决定<code>document.querySelector('#ID').getClientRects()[0].y</code>去获取元素当前高度，而这个是不会随比例改变而改变的，我只需要通过计算得到每个段落的高度，屏幕一半的高度。因为我是用<code>scrollIntoView({block: "center"})</code>去滚动的，所以需要计算元素经过一半的时候激活当前的菜单。</p>
+<h3>下面就直接把vue项目里的代码复制过来了</h3>
+<pre><code>let top = document.querySelector('#top').getClientRects()[0].y
+let limit
+let half = (window.screen.availHeight -100)/2
+let zz = document.querySelector('#bot').getClientRects()[0].y
+//首先需要四个变量，一个是返回顶部时用的高度top
+//第二个，当最后一段文章不够半屏幕时用来判断激活最后一个菜单的高度limit
+//第三个用来判断经过半屏高度的half
+//第四个是底部的一个点，用来计算最后一段文章的高度
+if(this.profileInfo.munNum[0]){
+//this.profileInfo.munNum这个是接口传进来的菜单数组根据菜单的数量去创建高度判断
+    var aa = document.querySelector('#one').getClientRects()[0].y
+    if (aa &lt; half&amp;&amp;top!=0){
+        this.isActive = 1
+        //isActive是vue里判断激活菜单用的
+    }
+    }if(this.profileInfo.munNum[1]){
+    	var bb = document.querySelector('#two').getClientRects()[0].y
+    if (bb &lt; half){
+        this.isActive = 2
+        //这是当这不是最后一段，正常经过点时候激活菜单样式
+    }
+    if (!this.profileInfo.munNum[2]){
+    //当这是最后一个菜单
+        const secondLastLength = bb-aa //这个是倒数第二段的高
+        const lastLength = zz-bb //这个是倒数第一段的高
+        if(secondLastLength&lt;half&amp;&amp;lastLength&gt;80){
+            limit = half - lastLength
+        }else if(secondLastLength&gt;half&amp;&amp;lastLength&gt;80){
+            limit = half - (secondLastLength-lastLength)
+        }else{
+        	limit = half - 80
+        }
+        if(aa&lt;limit){
+        //用倒数第二个菜单的锚点，的去判断一个比一半小的高度去激活最后一个菜单
+            this.isActive = 2
+        }
+    }
+}
+</code></pre>
+<h4>好！然后，你就看到👈这种效果了（只在个人博客有效果），掘金自己的动态锚点👉这种，我觉得很厉害但是还没试着去弄弄</h4><style>.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style></div>
+</div>

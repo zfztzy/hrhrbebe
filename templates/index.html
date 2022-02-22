@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!-- {% verbatim %} -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="../static/style/app.css">
+    <link rel="stylesheet" href='../static/style/test.css'>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/vue.js"></script>
+    <meta charset="UTF-8">
+    <title>HtTest</title>
+    <style type="text/css">
+        html {
+            height: 100%;
+            width: 100%;
+          overflow: auto;
+        }
+    </style>
+</head>
+
+
+<body>
+<!--
+    1. 准备素材
+    2. 页面布局
+    3. CSS 样式
+    4. JS 动效实现
+ -->
+
+
+
+
+
+
+<div id="app">
+    <div class="menu">
+        <label>
+            <table>
+                <thead>
+                    <th @click='myInfo'>关于FG</th>
+                    <th @click='diary'>心情</th>
+                    <th @click='stduy'>学习</th>
+                    <th @click='checkpoint'>打卡</th>
+                    <th @click='QA'>疑问</th>
+                    <th @click='difficulty'>填过的坑</th>
+                </thead>
+            </table>
+        </label>
+    </div>
+    <div class="container">
+        <div class="layer"><img src="../static/images/1.png"
+                                data-height="250" data-width="3000" height="290" width="3483"
+                                style="filter: blur(4px); transform: translate(0px, 0px) rotate(0deg);"></div>
+        <div class="layer"><img src="../static/images/2.png"
+                                data-height="275" data-width="3000" height="191" width="2090"
+                                style="transform: translate(0px, 0px) rotate(0deg); filter: blur(0px);"></div>
+        <div class="layer"><img src="../static/images/3.png"
+                                data-height="250" data-width="3000" height="290" width="3483"
+                                style="transform: translate(-58.0645px, 0px) rotate(0deg); filter: blur(1px);"></div>
+        <div class="layer"><img src="../static/images/4.png"
+                                data-height="250" data-width="3000" height="174" width="2090"
+                                style="transform: translate(0px, 4.87742px) rotate(0deg); filter: blur(4px);"></div>
+        <div class="layer"><img src="../static/images/5.png"
+                                data-height="275" data-width="3000" height="191" width="2090"
+                                style="transform: translate(0px, -2.09032px) rotate(0deg); filter: blur(5px);"></div>
+        <div class="layer"><img src="../static/images/6.png"
+                                data-height="275" data-width="3000" height="207" width="2264"
+                                style="filter: blur(6px); transform: translate(0px, 0px) rotate(0deg);"></div>
+        <div class="layer"><img src="../static/images/2-bi.png"
+                                data-height="275" data-width="3000" height="207" width="2264"
+                                style="filter: blur(6px); transform: translate(0px, 0px) rotate(0deg); display: none"></div>
+        <div class="layer"><img src="../static/images/2-zha.png"
+                                data-height="275" data-width="3000" height="207" width="2264"
+                                style="filter: blur(6px); transform: translate(0px, 0px) rotate(0deg); display: none"></div>
+    </div>
+    <div  :class='{navbar: isNavbar}'>
+        <a v-for='(i,index) in links' @click ='getIndex(index)' :class="{right:i.isRight}">{{i.msg}}</a>
+    </div>
+    <div  :class='{row:isRow}'>
+        <div :class="{main:isMain}">
+            <img src="../static/images/FG.jpg" style="float:left; height:80px; width: 80px; border-radius: 50%">
+            <h2 style="margin-left: 90px;">{{iMsg}}</h2> 
+            <p style="margin-left: 100px;">{{iMsg2}}</p>
+        </div>
+        <div v-if="msg===0" class="fakeimg">
+            <div class='leftMenu'>
+                <ul>
+                    <div v-for='i in aboutMe' style="display: block;">
+                        <br>
+                        <br>
+                        <li>{{i}}</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="rightMsg">
+                <ul>
+                    <li v-for='i in 9' style="display: block;">{{i}}</li>
+                </ul>
+            </div>
+            <div class='centerContent'>
+                <p>{{aboutMePpp}}</p>
+            </div>
+        </div>
+        <div v-else-if="msg===1" class="fakeimg">
+            <div class='leftMenu'>
+                <ul>
+                    <div v-for='i in aboutThisPage' style="display: block;">
+                        <br>
+                        <br>
+                        <li>{{i}}</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="rightMsg">
+                <ul>
+                    <li v-for='i in 9' style="display: block;">{{i}}</li>
+                </ul>
+            </div>
+            <div class='centerContent'>
+                <p>{{aboutThisPagePpp}}</p>
+            </div>
+        </div>
+        <div v-else-if="msg===2" class="fakeimg">
+            <div class='leftMenu'>
+                <ul>
+                    <div v-for='i in aboutWork' style="display: block;">
+                        <br>
+                        <br>
+                        <li>{{i}}</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="rightMsg">
+                <ul>
+                    <li v-for='i in 9' style="display: block;">{{i}}</li>
+                </ul>
+            </div>
+            <div class='centerContent'>
+                <p>{{aboutWorkPpp}}</p>
+            </div>
+        </div>
+        <div v-else-if="msg===3" class="fakeimg">
+            <div class='leftMenu'>
+                <ul>
+                    <div v-for='i in aboutSkill' style="display: block;">
+                        <br>
+                        <br>
+                        <li>{{i}}</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="rightMsg">
+                <ul>
+                    <li v-for='i in 9' style="display: block;">{{i}}</li>
+                </ul>
+            </div>
+            <div class='centerContent'>
+                <p>{{aboutSkillPpp}}</p>
+            </div>
+        </div>
+        <div v-else class="fakeimg">
+            <div class='leftMenu'>
+                <ul>
+                    <div v-for='i in aboutSkill' style="display: none;">
+                        <br>
+                        <br>
+                        <li>{{i}}</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="rightMsg">
+                <ul>
+                    <li v-for='i in 9' style="display: none;">{{i}}</li>
+                </ul>
+            </div>
+            <div class='centerContent' style="display: none;">
+                <p>{{aboutSkillPpp}}</p>
+            </div>
+        </div>
+        
+        <!--疑问-->
+        <!--<div v-for="i in mainMsg" class="fakeimg" >{{ i }}</div>-->
+    </div>
+    <div class="footer">
+        <h2>补充说明</h2>
+    </div>
+</div>
+
+
+
+<!-- {% endverbatim %} -->
+
+<script src="../static/js/main.js"></script>
+<script src="../static/js/app.js"></script>
+</body>
+
+</html>

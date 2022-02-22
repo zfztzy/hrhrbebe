@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>首页</title>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="format-detection" content="email=no"/>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="viewport" content="width=device-width,initial-scale=0.5,maximum-scale=0.5,minimum-scale=0.5,user-scalable=no">
+  <!--  -->
+  <script>
+    !function(e){function t(n){if(i[n])return i[n].exports;var a=i[n]={exports:{},id:n,loaded:!1};return e[n].call(a.exports,a,a.exports,t),a.loaded=!0,a.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.vw=function(e,t){var n=e||100,a=t||750,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),s=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),c=i.devicePixelRatio||1,u=r.documentElement,m=1,v=1/c;if(p);else if(d&&d[1]>534||s){u.style.fontSize=n+"px";var f=r.createElement("div");f.setAttribute("style","width: 1rem;display:none"),u.appendChild(f);var h=i.getComputedStyle(f).width;if(u.removeChild(f),h!==u.style.fontSize){var x=parseInt(h,10);m=100/x,v*=m}}else v=1;var w=r.querySelector('meta[name="viewport"]');w||(w=r.createElement("meta"),w.setAttribute("name","viewport"),r.head.appendChild(w)),w.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+v+",maximum-scale="+v+",minimum-scale="+v);var y=function(){u.style.fontSize=n/a*u.clientWidth*m+"px"};y(),i.addEventListener("resize",y)},e.exports=t["default"]}]);
+    !function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);
+    
+    (function() {
+      var clientWidth = document.documentElement.clientWidth;
+      if (clientWidth > 750) {
+        vw(100, 750);
+      } else {
+        flex();
+      }
+      window.px2rem = function (px) { return px / 100 + 'rem'; }
+    })();
+  </script>
+    
+  <script>
+  window._to = {
+    eventType: 'click',
+    expoOnce: true,
+    autoLogPv: false
+  };
+  </script>
+
+      <meta name="Alipay:title" content="首页" />
+      <meta name="Alipay:imgUrl" content="https://t.alipayobjects.com/images/rmsweb/T1mQxhXbRXXXXXXXXX.png" />
+      <meta name="Alipay:desc" content="" />
+      
+      <meta name="fengdie:pkg" content="pkg-benefit@1.0.66" />
+      <meta name="fengdie:aid" content="221786" />
+      <meta name="fengdie:pid" content="333665" />
+    <script>
+    (function loader(){if(window.Tracert){return}var Tracert={_isInit:true,_readyToRun:[],call:function(){var args=arguments;var argsList;try{argsList=[].slice.call(args,0)}catch(ex){var argsLen=args.length;argsList=[];for(var i=0;i<argsLen;i++){argsList.push(args[i])}}Tracert.addToRun(function(){Tracert.call.apply(Tracert,argsList)})},addToRun:function(_fn){var fn=_fn;if(typeof fn==="function"){fn._logTimer=(new Date())-0;Tracert._readyToRun.push(fn)}},};var fnlist=["config","logPv","info","err","click","expo","pageName","pageState","time","timeEnd","parse","expoCheck","stringify","report"];for(var i=0;i<fnlist.length;i++){var fn=fnlist[i];(function(fn){Tracert[fn]=function(){var args=arguments;var argsList;try{argsList=[].slice.call(args,0)}catch(ex){var argsLen=args.length;argsList=[];for(var i=0;i<argsLen;i++){argsList.push(args[i])}}argsList.unshift(fn);Tracert.addToRun(function(){Tracert.call.apply(Tracert,argsList)})}})(fn)}window.Tracert=Tracert})();
+    !function(){if(!window.BizLog){var n={_readyToRun:[],call:function(){var o,a=arguments;try{o=[].slice.call(a,0)}catch(i){var u=a.length;o=[];for(var c=0;u>c;c++)o.push(a[c])}n.addToRun(function(){n.call.apply(n,o)})},addToRun:function(o){"function"==typeof o&&(o._logTimer=new Date-0,n._readyToRun.push(o))}};window.BizLog=n}}();
+    window.BizLog.call('config', { disabled: true });
+  </script>
+
+    <meta name="data-bizType" content="FDCloud"/>
+    <meta name="data-aspm" content="a247"/>
+  <link rel="stylesheet" href="https://gw.alipayobjects.com/os/??q/cms/assets/6b85fd38147d07b841fc0c085c6f0866.css,q/cms/assets/c0fb43164f4070c3c7ea21c64fc3033e.css,q/cms/assets/e390b4919f1d3c0e926c11a8f29726c9.css,q/cms/assets/6388f0ba3e6f6329fb9e325c1c7232f0.css" /></head>
+
+<body data-aspm="bfc333665" >
+  <div id="root">
+    
+      <div>
+    <style>
+      .fd-pre-loading {
+        height: 100vh;
+        width: 100vw;
+        text-align: center;
+        line-height: 100vh;
+      }
+  
+      .fd-pre-loading svg {
+        -ms-animation: circle 1s infinite linear;
+        -webkit-animation: circle 1s infinite linear;
+        -moz-animation: circle 1s infinite linear;
+        -o-animation: circle 1s infinite linear;
+        animation: circle 1s infinite linear;
+        -ms-transform-origin: center;
+        -webkit-transform-origin: center;
+        -moz-transform-origin: center;
+        -o-transform-origin: center;
+        transform-origin: center;
+      }
+  
+      @-ms-keyframes circle {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @-webkit-keyframes circle {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @-moz-keyframes circle {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @-o-keyframes circle {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes circle {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  
+    <div class="fd-pre-loading">
+      <svg width="77px" height="77px" viewBox="0 0 144 144" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <linearGradient x1="0%" y1="53.2427619%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#6260E1" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#6260E1" offset="100%"></stop>
+          </linearGradient>
+        </defs>
+        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g id="loading" transform="translate(-100.000000, -73.000000)" stroke-width="8">
+            <g id="Group" transform="translate(104.000000, 77.000000)">
+              <circle id="Oval-11" stroke="#E5E5E5" cx="68" cy="68" r="68"></circle>
+              <path d="M68,136 C105.555363,136 136,105.555363 136,68 C136,30.444637 105.555363,0 68,0 C30.444637,0 0,30.444637 0,68" id="Oval-11-Copy"
+                stroke="url(#linearGradient-1)" stroke-linecap="round"></path>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  
+  </div>
+    
+  </div>
+  <!-- polyfill -->
+  <script src="https://gw.alipayobjects.com/as/g/component/es6-shim/0.35.1/??es6-shim.min.js,es6-sham.min.js"></script>
+  
+  <!-- preact 8.2.9 -->
+  <!-- prop-types 15.6.1 -->
+  <!-- preact-compat 3.18.0 -->
+  <script src="https://gw.alipayobjects.com/os/rmsportal/??vpbyIpRovXIQMInRnOlP.js,rILDPgWLaNdNZhRXQPiN.js,vZJHqbwFVlFdHjazsxdT.js"></script>
+  <script>
+    window.React = preactCompat;
+    window.ReactDOM = preactCompat;
+  </script>
+<script src="https://gw.alipayobjects.com/as/g/??datavprod/auto-seed/0.2.2/index.js,component/tracert/3.0.5/index.js"></script>
+        <script src="//res.wx.qq.com/open/js/jweixin-1.3.0.js"></script>
+        <script src="//gw.alipayobjects.com/as/g/yunfengdie/wechat-share-sdk/0.0.5/wechat-share-sdk.min.js"></script>
+        <script>
+          try {
+            var WechatShareSdk = window.WechatShareSdk;
+            var share = {
+              title:  document.querySelector("meta[name='Alipay:title']").getAttribute("content"),
+              link: document.querySelector("meta[name='Alipay:link']").getAttribute("content"),
+              desc: document.querySelector("meta[name='Alipay:desc']").getAttribute("content"),
+              imgUrl: document.querySelector("meta[name='Alipay:imgUrl']").getAttribute("content"),
+            };
+            var sdk = new WechatShareSdk({
+              debug: false,
+              appName: 'yunfengdie',
+              host: '//share.yunfengdie.cn',
+              api: '/api/client/v1/share.jsonp',
+              share: share,
+            });
+          } catch (e) {
+            console.log('[wechat-share-sdk exception]', e);
+          }
+        </script>
+    <script>FD_CONTEXT_DATA = {};
+FD_CONTEXT_DATA["_component_components_Head_1_index_79i2oswkym"] =
+      {"img":"https://gw.alipayobjects.com/os/q/cms/images/kgq6z5kl/c4617852-3fb2-4663-afec-6fdbb8c07799_w1086_h410.png"};
+FD_CONTEXT_DATA["_component_components_Benefit_list_2_index_t6m6vy2n8"] =
+      [{"img":"https://gw.alipayobjects.com/os/q/cms/images/kgq6pa06/c221cac9-6b29-41b7-b24e-0c64c5ddbe79_w880_h884.png","title":"我的简介","desc":"想了解我吗点这里","link":"b.html","buttonText":"立即了解","buttonLink":"b.html"},{"img":"https://gw.alipayobjects.com/os/q/cms/images/kgq6vcy7/34a0a927-bed8-4b3a-9410-1ce1c299ccf4_w403_h250.jpg","title":"我的技术栈","desc":"一个不务正业的测试，干活3年瞎学的东西","link":"b.html","buttonText":"了解一下","buttonLink":"c.html"},{"img":"https://gw.alipayobjects.com/os/q/cms/images/kgq7levf/bf37671c-7726-4182-91fe-5c2ba6cdbca4_w1068_h514.png","title":"我做过的项目","desc":"剖析一下我的每一个一小步走过的项目，和心态","link":"b.html","buttonText":"了解一下","buttonLink":"c.html"},{"img":"https://gw.alipayobjects.com/os/q/cms/images/kgq837gr/f12f4cca-1095-4a57-af77-b3ea5d5b2b53_w1000_h510.jpg","title":"我的学习途径和方法","desc":"干这行的，学习最重要的是学，是做","link":"b.html","buttonText":"参考一下","buttonLink":"c.html"},{"img":"https://gw.alipayobjects.com/os/q/cms/images/kgq8c8di/f9727711-4f23-426e-bf7f-2147ee061b1b_w712_h344.png","title":"讨论一下","desc":"做的不好，仅供参考，有什么欢迎留言讨论","link":"b.html","buttonText":"留一个言","buttonLink":"c.html"}];
+FD_CONTEXT_DATA["_component_components_Footer_3_index_uo4r5yxyi"] =
+      {"text":""};
+
+FD_GLOBAL_DATA = {"env":"server","pages":[{"name":"a.html","title":"首页","templatePath":"pages/index/index.html"},{"name":"b.html","title":"产品详情","templatePath":"pages/detail/index.html"},{"name":"c.html","title":"报名表单","templatePath":"pages/apply/index.html"}]};
+FD_SCHEMA_DATA = {};
+
+</script><script>
+      (function() {
+        window['FD_COMPONENTS_LIST'] = [{"uid":"_component_components_Head_1_index_79i2oswkym","fn":"_component_components/Head_1/index","name":"components/Head_1/index","schemaName":"components/Head_1/index","isPrivate":true},{"uid":"_component_components_Benefit_list_2_index_t6m6vy2n8","fn":"_component_components/Benefit_list_2/index","name":"components/Benefit_list_2/index","schemaName":"components/Benefit_list_2/index","isPrivate":true},{"uid":"_component_components_Footer_3_index_uo4r5yxyi","fn":"_component_components/Footer_3/index","name":"components/Footer_3/index","schemaName":"components/Footer_3/index","isPrivate":true}];
+      })();
+    </script><script src="https://gw.alipayobjects.com/os/??q/cms/assets/997aaf9497bfb29417d8051352d09387.js,q/cms/assets/d99b5b87b35caee5c6ceea3f09213cef.js,q/cms/assets/e856477db44a662a13b24dcd7f5592d9.js,q/cms/assets/72fe67084883623f7bc2b7efb6cc6d93.js,rmsportal/CtCAauXCQmrvkOXxnjsJ.js"></script></body>
+</html>

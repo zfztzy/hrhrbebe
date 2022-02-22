@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div class="markdown-body"><!---1710977357--><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden;color:#333}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:30px;margin-bottom:5px}.markdown-body h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:18px;padding-bottom:0}.markdown-body h4{font-size:16px}.markdown-body h5{font-size:15px}.markdown-body h6{margin-top:5px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style><h1>学习vue的过程中，用vue仿写一个华泰官网的轮播组件当作业</h1>
+        <h2>先分析仿写对象</h2>
+        <p>上一个仿写对象的链接</p>
+        <p><a href="https://www.htsc.com.cn/insights" target="_blank" rel="nofollow noopener noreferrer">https://www.htsc.com.cn/insights</a></p>
+        <p>华泰官网👆就是他👆</p>
+        <p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/afefd3fed45244b0a959240e60249890~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+        <p>观察一下他的效果，首先确认的是他是有3个显示的组件，1个隐藏的组件</p>
+        <p>每个组件构成是上面一长图片，下面一个1行的类型，一个2行的标题，2行的日期，3行的内容，超出显示...</p>
+        <p>在动画过程的时候最左边的移动移出盒子，右边开始移进来。</p>
+        <p>整体一个平移的效果大概半秒不到，5秒循环一次</p>
+        <h2>那么接下来开始动手</h2>
+        <h3>先把盒子的组件写出来</h3>
+        <pre><code>&lt;template&gt;
+            &lt;div class="swiperItem"&gt;
+                &lt;div class="swiperItemPicture"&gt;
+                    &lt;slot name="img"&gt;&lt;/slot&gt;
+                &lt;/div&gt;
+                &lt;div class="swiperItemText"&gt;
+                    &lt;div class="type"&gt;
+                        &lt;slot name="type"&gt;&lt;/slot&gt;
+                    &lt;/div&gt;
+                    &lt;div class="title"&gt;
+                        &lt;slot name="title"&gt;&lt;/slot&gt;
+                    &lt;/div&gt;
+                    &lt;div class="date"&gt;
+                        &lt;slot name="date"&gt;&lt;/slot&gt;
+                    &lt;/div&gt;
+                    &lt;div class="text"&gt;
+                        &lt;slot name="text"&gt;&lt;/slot&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/template&gt;
+
+        &lt;script&gt;
+        export default {
+            name:'SwiperItem'
+        }
+        &lt;/script&gt;
+        </code></pre>
+        <p>先把每个变量的内容预留出插槽，然后设定好样式</p>
+        <pre><code>&lt;style&gt;
+        .swiperItem{
+            margin-left: 25px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            outline: none;
+            background: #fff;
+
+        }
+
+        .swiperItemPicture img{
+            width: 381px;;
+            height: 255px;
+        }
+
+        .swiperItem .swiperItemText{
+            -webkit-box-shadow: 0 0 60px 0 rgba(0,0,0,.1);
+            box-shadow: 0 0 60px 0 rgba(0,0,0,.1);
+            width: 316px;;
+            margin-bottom: 35px;
+            padding: 32px;
+
+        }
+
+        .swiperItem .title{
+            font-size: 18px;
+            font-weight: 400;
+            color: #2d5fde;
+            line-height: 27px;
+            height: 27px;
+            margin-bottom: 22px;
+            font-weight: 700;
+        }
+
+        .swiperItem .stitle{
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            line-height: 40px;
+            height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -ms-line-clamp: 2;
+            -ms-box-orient: vertical;
+            -webkit-box-orient: vertical;
+            margin-bottom: 13px;
+        }
+
+
+
+        .swiperItem .date{
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 13px;
+        }
+
+
+        .swiperItem .text{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            height: 90px;
+            line-height: 2;
+            line-clamp: 3;
+            -ms-line-clamp: 3;
+            -ms-box-orient: vertical;
+            -webkit-box-orient: vertical;
+        }
+        &lt;/style&gt;
+        </code></pre>
+        <h3>然后写装这个内容组件的盒子组件</h3>
+        <pre><code>&lt;template&gt;
+            &lt;div class="swiperBox"&gt;
+                &lt;div class="swiper"&gt;
+                    &lt;slot&gt;&lt;/slot&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/template&gt;
+
+        &lt;script&gt;
+        export default {
+
+        }
+        &lt;/script&gt;
+
+        &lt;style&gt;
+        .swiperBox{
+            display: flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .swiper{
+            position: relative;
+            width: 1290px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-transition-property: -webkit-transform;
+            transition-property: -webkit-transform;
+            -o-transition-property: transform;
+            transition-property: transform;
+            transition-property: transform,-webkit-transform;
+            -webkit-box-sizing: content-box;
+            box-sizing: content-box;
+            margin-left: 50px;
+            overflow: hidden;
+            list-style: none;
+            margin-bottom: 25px;
+            padding: 0;
+            z-index: 0;
+        }
+        &lt;/style&gt;
+        </code></pre>
+        <p>留一个插槽放内容组件</p>
+        <h3>最后把他们组装起来，加上js效果</h3>
+        <pre><code>&lt;template&gt;
+            &lt;div&gt;
+                &lt;div class="swiperTitle"&gt;
+                    &lt;h4 class="swiperTitleText"&gt;每日一题&lt;/h4&gt;
+                &lt;/div&gt;
+                &lt;Swiper-box&gt;
+                    &lt;div :style="transform"&gt;
+                        &lt;Leetcode-box&gt;
+                            &lt;img slot="img" :src="a.url" alt=""&gt;
+                            &lt;p slot="type"&gt;{{a.type}}&lt;/p&gt;
+                            &lt;p slot="title"&gt;{{a.title}}&lt;/p&gt;
+                            &lt;p slot="date"&gt;{{a.date}}&lt;/p&gt;
+                            &lt;p slot="text"&gt;{{a.text}}&lt;/p&gt;
+                        &lt;/Leetcode-box&gt;
+                    &lt;/div&gt;
+                    &lt;div :style="transform"&gt;
+                        &lt;Leetcode-box&gt;
+                            &lt;img slot="img" :src="b.url" alt=""&gt;
+                            &lt;p slot="type"&gt;{{b.type}}&lt;/p&gt;
+                            &lt;p slot="title"&gt;{{b.title}}&lt;/p&gt;
+                            &lt;p slot="date"&gt;{{b.date}}&lt;/p&gt;
+                            &lt;p slot="text"&gt;{{b.text}}&lt;/p&gt;
+                        &lt;/Leetcode-box&gt;
+                    &lt;/div&gt;
+                    &lt;div :style="transform"&gt;
+                        &lt;Leetcode-box&gt;
+                            &lt;img slot="img" :src="c.url" alt=""&gt;
+                            &lt;p slot="type"&gt;{{c.type}}&lt;/p&gt;
+                            &lt;p slot="title"&gt;{{c.title}}&lt;/p&gt;
+                            &lt;p slot="date"&gt;{{c.date}}&lt;/p&gt;
+                            &lt;p slot="text"&gt;{{c.text}}&lt;/p&gt;
+                        &lt;/Leetcode-box&gt;
+                    &lt;/div&gt;
+                    &lt;div v-show="isShow" :style="transform"&gt;
+                        &lt;Leetcode-box&gt;
+                            &lt;img slot="img" :src="d.url" alt=""&gt;
+                            &lt;p slot="type"&gt;{{d.type}}&lt;/p&gt;
+                            &lt;p slot="title"&gt;{{d.title}}&lt;/p&gt;
+                            &lt;p slot="date"&gt;{{d.date}}&lt;/p&gt;
+                            &lt;p slot="text"&gt;{{d.text}}&lt;/p&gt;
+                        &lt;/Leetcode-box&gt;
+                    &lt;/div&gt;
+                &lt;/Swiper-box&gt;
+            &lt;/div&gt;
+        &lt;/template&gt;
+
+        &lt;script&gt;
+        import LeetcodeBox from '../study/LeetcodeBox';
+        import SwiperBox from '../study/SwiperBox.vue';
+        export default {
+          components: { SwiperBox, LeetcodeBox },
+            data(){
+                return {
+                    a:{},
+                    b:{},
+                    c:{},
+                    d:{},
+                    list:[
+                        {
+                        url:require('../../assets/pbg/TB1.png'),
+                        type:'每日温度，解题思路:栈，难度:中等',
+                        title:'请根据每日气温列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用&nbsp;0 来代替。例如，给定一个列表&nbsp;temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是&nbsp;[1, 1, 4, 2, 1, 1, 0, 0]。提示：气温 列表长度的范围是&nbsp;[1, 30000]。每个气温的值的均为华氏度，都是在&nbsp;[30, 100]&nbsp;范围内的整数。',
+                        date:'2021-01-24',
+                        text:`维护一个存储下标的单调栈，从栈底到栈顶的下标对应的温度列表中的温度依次递减。如果一个下标在单调栈里，则表示尚未找到下一次温度更高的下标。正向遍历温度列表。对于温度列表中的每个元素 T[i]，如果栈为空，则直接将 i 进栈，如果栈不为空，则比较栈顶元素 prevIndex 对应的温度 T[prevIndex] 和当前温度 T[i]，如果 T[i] &gt; T[prevIndex]，则将 prevIndex 移除，并将 prevIndex 对应的等待天数赋为 i - prevIndex，重复上述操作直到栈为空或者栈顶元素对应的温度小于等于当前温度，然后将 i 进栈。为什么可以在弹栈的时候更新 ans[prevIndex] 呢？因为在这种情况下，即将进栈的 i 对应的 T[i] 一定是 T[prevIndex] 右边第一个比它大的元素，试想如果 prevIndex 和 i 有比它大的元素，假设下标为 j，那么 prevIndex 一定会在下标 j 的那一轮被弹掉。由于单调栈满足从栈底到栈顶元素对应的温度递减，因此每次有元素进栈时，会将温度更低的元素全部移除，并更新出栈元素对应的等待天数，这样可以确保等待天数一定是最小的。`
+                        },
+                        {
+                        url:require('../../assets/pbg/TB2.png'),
+                        type:'整数拆分，解题思路:动态规划，数学，难度:中等',
+                        title:'给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。',
+                        date:'2021-01-22',
+                        text:``
+                        },
+                        {
+                        url:require('../../assets/pbg/TB3.png'),
+                        type:'合并二叉树,解题思路:深度优先搜索，广度优先搜索,难度:简单',
+                        title:'给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为&nbsp;NULL 的节点将直接作为新二叉树的节点。',
+                        date:'2021-01-23',
+                        text:'深度优先搜索，广度优先搜索'
+                        },
+                        {
+                        url:require('../../assets/pbg/TB4.png'),
+                        type:' 二叉树的最小深度,解题思路:广度优先搜索,难度:简单',
+                        title:'给定一个二叉树，找出其最小深度。最小深度是从根节点到最近叶子节点的最短路径上的节点数量。说明：叶子节点是指没有子节点的节点。',
+                        date:'2021-1-22',
+                        text:`广度优先搜索，遍历整棵树。当我们找到一个叶子节点时，直接返回这个叶子节点的深度。广度优先搜索的性质保证了最先搜索到的叶子节点的深度一定最小。`
+                        },
+                    ],
+                    transform:'',
+                    //控制是否需要动画的css变量，在隐藏和交换内容的时候不需要过度，在平移的时候需要设置内容
+                    isShow:false
+                    //在动画开始之前和动画结束之后，让第四个组件隐藏，调整动画效果需要
+                }
+            },
+            methods:{
+                swipe(){
+                    setTimeout(() =&gt; {
+                        this.a = this.list[0]
+                        this.b = this.list[1]
+                        this.c = this.list[2]
+                        this.d = this.list[3]
+                        this.isShow = false
+                        this.transform = ''
+                    },);
+                    setTimeout(() =&gt; {
+                        this.isShow = true
+                    },4640);
+                    setTimeout(() =&gt; {
+                        this.transform = 'transform: translate(-406px, 0px); transition: all 0.3s'
+                    },4660);
+                    setTimeout(() =&gt; {
+                        this.a = this.list[1]
+                        this.b = this.list[2]
+                        this.c = this.list[3]
+                        this.d = this.list[0]
+                        this.isShow = false
+                        this.transform = ''
+                    },5000);
+                    setTimeout(() =&gt; {
+                        this.isShow = true
+                    },9640);
+                    setTimeout(() =&gt; {
+                        this.transform = 'transform: translate(-406px, 0px); transition: all 0.3s'
+                    },9660);
+                    setTimeout(() =&gt; {
+                        this.a = this.list[2]
+                        this.b = this.list[3]
+                        this.c = this.list[0]
+                        this.d = this.list[1]
+                        this.isShow = false
+                        this.transform = ''
+                    },10000);
+                    setTimeout(() =&gt; {
+                        this.isShow = true
+                    },14640);
+                    setTimeout(() =&gt; {
+                        this.transform = 'transform: translate(-406px, 0px); transition: all 0.3s'
+                    },14660);
+                    setTimeout(() =&gt; {
+                        this.a = this.list[3]
+                        this.b = this.list[0]
+                        this.c = this.list[1]
+                        this.d = this.list[2]
+                        this.isShow = false
+                        this.transform = ''
+                    },15000);
+                    setTimeout(() =&gt; {
+                        this.isShow = true
+                    },19640);
+                    setTimeout(() =&gt; {
+                        this.transform = 'transform: translate(-406px, 0px); transition: all 0.3s'
+                    },19660);
+                },
+
+            },
+            mounted(){
+                this.swipe()
+                setInterval(() =&gt; {
+                    this.swipe()},20000)
+            }
+        }
+        &lt;/script&gt;
+
+        &lt;style&gt;
+        .swiperTitle{
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            margin-bottom: 75px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        &lt;/style&gt;
+        </code></pre>
+        <h3>这样就写完了</h3>
+        <p>还有跳转的方法和链接，和调接口获取内容的，补上就可以放到自己的博客上用了</p><style>.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style></div>
+        </div>
+</body>
+</html>

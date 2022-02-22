@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="markdown-body"><!--166283742--><style>.markdown-body{word-break:break-word;line-height:1.75;font-weight:400;font-size:15px;overflow-x:hidden;color:#333}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{line-height:1.5;margin-top:35px;margin-bottom:10px;padding-bottom:5px}.markdown-body h1{font-size:30px;margin-bottom:5px}.markdown-body h2{padding-bottom:12px;font-size:24px;border-bottom:1px solid #ececec}.markdown-body h3{font-size:18px;padding-bottom:0}.markdown-body h4{font-size:16px}.markdown-body h5{font-size:15px}.markdown-body h6{margin-top:5px}.markdown-body p{line-height:inherit;margin-top:22px;margin-bottom:22px}.markdown-body img{max-width:100%}.markdown-body hr{border:none;border-top:1px solid #ddd;margin-top:32px;margin-bottom:32px}.markdown-body code{word-break:break-word;border-radius:2px;overflow-x:auto;background-color:#fff5f5;color:#ff502c;font-size:.87em;padding:.065em .4em}.markdown-body code,.markdown-body pre{font-family:Menlo,Monaco,Consolas,Courier New,monospace}.markdown-body pre{overflow:auto;position:relative;line-height:1.75}.markdown-body pre>code{font-size:12px;padding:15px 12px;margin:0;word-break:normal;display:block;overflow-x:auto;color:#333;background:#f8f8f8}.markdown-body a{text-decoration:none;color:#0269c8;border-bottom:1px solid #d1e9ff}.markdown-body a:active,.markdown-body a:hover{color:#275b8c}.markdown-body table{display:inline-block!important;font-size:12px;width:auto;max-width:100%;overflow:auto;border:1px solid #f6f6f6}.markdown-body thead{background:#f6f6f6;color:#000;text-align:left}.markdown-body tr:nth-child(2n){background-color:#fcfcfc}.markdown-body td,.markdown-body th{padding:12px 7px;line-height:24px}.markdown-body td{min-width:120px}.markdown-body blockquote{color:#666;padding:1px 23px;margin:22px 0;border-left:4px solid #cbcbcb;background-color:#f8f8f8}.markdown-body blockquote:after{display:block;content:""}.markdown-body blockquote>p{margin:10px 0}.markdown-body ol,.markdown-body ul{padding-left:28px}.markdown-body ol li,.markdown-body ul li{margin-bottom:0;list-style:inherit}.markdown-body ol li .task-list-item,.markdown-body ul li .task-list-item{list-style:none}.markdown-body ol li .task-list-item ol,.markdown-body ol li .task-list-item ul,.markdown-body ul li .task-list-item ol,.markdown-body ul li .task-list-item ul{margin-top:0}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:3px}.markdown-body ol li{padding-left:6px}.markdown-body .contains-task-list{padding-left:0}.markdown-body .task-list-item{list-style:none}@media (max-width:720px){.markdown-body h1{font-size:24px}.markdown-body h2{font-size:20px}.markdown-body h3{font-size:18px}}</style>
+            <h2 id="one">今天做这道题</h2>
+            <p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cc26775367b45d3b9fa616ab66f1014~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+            <h2 id="two">做题流程</h2>
+            <p>先说一下要用的包和流程</p>
+            <p>还是跟线性回归一样</p>
+            <p>首先导入数据
+            <code>import pandas as pd</code>pandas导入数据</p>
+            <p>然后可视化
+            <code>from matplotlib import pyplot as plt</code>一样的使用plt去画图</p>
+            <p>建立模型训练
+            <code>from sklearn.linear_model import LogisticRegression</code>
+            这次不是线性回归了，所以用的LogisticRegression</p>
+            <p>预测数据
+            <code>import numpy as np</code>用numpy去构造需要预测的数据</p>
+            <p>评估模型
+            <code>from sklearn.metrics import accuracy_score</code>还是跟以前一样去评估模型</p>
+            <h2 id="three">是吧，大多数都跟之前一样的，所以就不废话直接上代码。</h2>
+            <pre><code>
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# 导入数据及可视化
+data = pd.read_csv('task1_data.csv')
+data.head()
+fig1 = plt.figure()
+plt.scatter(data.loc[:, '尺寸1'], data.loc[:, '尺寸2'])
+plt.title('chip size1-size2')
+plt.xlabel('size1')
+plt.ylabel('size2')
+# plt.show()
+
+
+
+# 建立筛选良品、次品的变量mask
+
+mask = data.loc[:, 'y'] == 1
+print(mask)
+fig2 = plt.figure()
+ok = plt.scatter(data.loc[:, '尺寸1'][mask], data.loc[:, '尺寸2'][mask])
+ng = plt.scatter(data.loc[:, '尺寸1'][~mask], data.loc[:, '尺寸2'][~mask])
+plt.title('chip size1-size2')
+plt.xlabel('size1')
+plt.ylabel('size2')
+plt.legend((ok, ng), ('ok', 'ng'))
+plt.show()
+
+
+# x,y 赋值
+
+x = data.drop(['y'], axis=1)
+y = data.loc[:, 'y']
+x.head()
+y.head()
+
+
+# 模型训练
+model = LogisticRegression()
+model.fit(x, y)
+
+
+# 模型预测
+
+y_predict = model.predict(x)
+print(y)
+print(y_predict)
+
+accuracy = accuracy_score(y, y_predict)
+print(accuracy)
+
+
+# 测试样本
+
+x_test = np.array([[1, 10]])
+
+y_test_predict = model.predict(x_test)
+
+print(y_test_predict)
+print('ok' if y_test_predict==1 else 'ng')
+
+
+
+print(model.intercept_)
+print(model.coef_)
+
+theta0 = model.intercept_
+theta1, theta2 = model.coef_[0][0], model.coef_[0][1]
+
+print(theta0, theta1, theta2)
+
+
+x1 = data.loc[:, '尺寸1']
+x2_new = -(theta0 + theta1*x1)/theta2
+
+
+# 最后加一个，画出决策边界
+
+fig3 = plt.figure()
+plt.scatter(data.loc[:, '尺寸1'], data.loc[:, '尺寸2'])
+plt.title('chip size1-size2')
+plt.xlabel('size1')
+plt.ylabel('size2')
+ok = plt.scatter(data.loc[:, '尺寸1'][mask], data.loc[:, '尺寸2'][mask])
+ng = plt.scatter(data.loc[:, '尺寸1'][~mask], data.loc[:, '尺寸2'][~mask])
+plt.title('chip size1-size2')
+plt.plot(x1, x2_new)
+plt.xlabel('size1')
+plt.ylabel('size2')
+plt.legend((ok, ng), ('ok', 'ng'))
+plt.show()
+            </code></pre>
+<style>.markdown-body pre,.markdown-body pre>code.hljs{color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:#d14}.hljs-section,.hljs-selector-id,.hljs-title{color:#900;font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:navy;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style></div>
+</body>
+</html>
