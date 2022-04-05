@@ -1,1 +1,0 @@
-print ("adcde"[1:4])
