@@ -47,7 +47,10 @@ urlpatterns = [
     path('get_department_list/', views.get_department_list),
     path('get_file_list/', views.get_file_list),
     path('new_download_excel/', views.new_download_excel),
+    path('project_status_monthly/', views.project_status_monthly),
     path('save_excel/', views.save_excel),
+    path('applicant_according_to_recruitment/', views.applicant_according_to_recruitment),
+    path('get_columns/', views.get_columns),
     path('login/', views.login),
 
 ]

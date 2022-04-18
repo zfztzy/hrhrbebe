@@ -62,12 +62,63 @@ def newDownloadExcel(excelType):
         print('error', excelType)
 
 
+def applicant_according_to_recruitment(recruitmentId):
+    info = {}
+    totalTarget = models.ApplicantInfo.objects.all().filter(related=recruitmentId)
+    print(totalTarget)
+    total =len(totalTarget)
+    fail = len(totalTarget.filter(process_status__icontains='fail')) if totalTarget.filter(process_status__icontains='fail') else 0
+    print(fail)
+    done = len(totalTarget.filter(process_status__icontains='fellow')) if totalTarget.filter(process_status__icontains='fellow') else 0
+    print(done)
+    giveUp = len(totalTarget.filter(process_status__icontains='giveUp')) if totalTarget.filter(process_status__icontains='giveUp') else 0
+    print(giveUp)
+    discuss = len(totalTarget.filter(process_status__icontains='discuss')) if totalTarget.filter(process_status__icontains='discuss') else 0
+    print(discuss)
+    standBy = len(totalTarget.filter(process_status__icontains='standBy')) if totalTarget.filter(process_status__icontains='standBy') else 0
+    print(standBy)
+    created = len(totalTarget.filter(process_status__icontains='created')) if totalTarget.filter(process_status__icontains='created') else 0
+    print(created)
+    filtering = len(totalTarget.filter(process_status__icontains='pass')) if totalTarget.filter(process_status__icontains='pass') else 0
+    print(filtering)
+    info['total'] = total
+    info['done'] = done
+    info['filtering'] = filtering + created + standBy + discuss
+    info['fail'] = fail
+    info['giveUp'] = giveUp
+    return info
+
+
+def projectStatusMonthly():
+    date = str(datetime.date.today())
+    print(date)
+    # date = '2022-04-04'
+    if date[-2:] != '04':
+        print(date[-2:])
+        return
+    date = date.replace('-', '')
+    yearMonth = date[:6]
+    oldYearMonth = date[:4] + str(int(date[4:6]) - 1) if int(date[4:6]) != 1 else str(int(date[:4])-1) + '12'
+    oldYearMonth = oldYearMonth[:4] + '0' + oldYearMonth[-1] if len(oldYearMonth) == 5 else oldYearMonth
+    print(str(date).replace('-', '')[:6])
+    print(yearMonth)
+    print(oldYearMonth)
+    target = models.ProjectStatusInfo.objects.filter(date=oldYearMonth)
+    for i in target:
+        i = model_to_dict(i)
+        print(i)
+        newDict = i.copy()
+        newDict.pop('key')
+        newDict['date'] = yearMonth
+        newDict['sow_num'] = '0'
+        newDict['project_num'] = '0'
+        newDict['new_project_num'] = '0'
+        newDict['offset_num'] = '0'
+        newDict['monthly_target'] = '0'
+        newDict['monthly_reach'] = '0'
+        print(newDict)
+        models.ProjectStatusInfo.objects.create(**newDict)
+
+
 if __name__ == '__main__':
-    target = models.ApplicantInfo.objects.all()
-    total = len(target)
-    print(f'total:{total}')
-    yearTarget = target.filter(recommend_time__year=2022, recommend_time__month=3)
-    year2022Total = len(yearTarget)
-    print(f'year2022Total:{year2022Total}')
-    for i in yearTarget:
-        print(i.recommend_time)
+    projectStatusMonthly()

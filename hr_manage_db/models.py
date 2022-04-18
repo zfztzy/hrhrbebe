@@ -9,6 +9,7 @@ from django.db import models
 
 
 class ApplicantInfo(models.Model):
+    key = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     phone_num = models.CharField(max_length=255, blank=True, null=True)
     graduated_from = models.CharField(max_length=255, blank=True, null=True)
@@ -64,7 +65,54 @@ class DjangoMigrations(models.Model):
         db_table = 'django_migrations'
 
 
+class PduInfo(models.Model):
+    department = models.CharField(max_length=255, blank=True, null=True)
+    pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    hwpdu_leader = models.CharField(db_column='HWPDU_Leader', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    region = models.CharField(max_length=255, blank=True, null=True)
+    pdu_manager = models.CharField(db_column='PDU_manager', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pdu_qa = models.CharField(db_column='PDU_QA', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pdu_hr = models.CharField(db_column='PDU_HR', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    comment = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'pdu_info'
+
+
+class PoInfo(models.Model):
+    project_po = models.CharField(max_length=255, blank=True, null=True)
+    po_name = models.CharField(max_length=255, blank=True, null=True)
+    business = models.CharField(max_length=255, blank=True, null=True)
+    pm = models.CharField(db_column='PM', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    star_time = models.CharField(max_length=255, blank=True, null=True)
+    end_time = models.CharField(max_length=255, blank=True, null=True)
+    duration = models.CharField(db_column='Duration', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    onsite = models.CharField(max_length=255, blank=True, null=True)
+    operating_model = models.CharField(max_length=255, blank=True, null=True)
+    price_intax = models.CharField(max_length=255, blank=True, null=True)
+    department = models.CharField(max_length=255, blank=True, null=True)
+    pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    region = models.CharField(max_length=255, blank=True, null=True)
+    delivery_leader = models.CharField(max_length=255, blank=True, null=True)
+    qa = models.CharField(db_column='QA', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    hr = models.CharField(db_column='HR', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    hwpm = models.CharField(db_column='HWPM', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    omper = models.CharField(db_column='OMPer', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    score = models.CharField(max_length=255, blank=True, null=True)
+    omp_endtime = models.CharField(db_column='OMP_endtime', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    amount_extax = models.CharField(db_column='amount _extax', max_length=255, blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    inkpi = models.CharField(db_column='INKPI', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    project_id = models.CharField(max_length=255, blank=True, null=True)
+    status = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'po_info'
+
+
 class ProjectInfo(models.Model):
+    key = models.AutoField(primary_key=True)
     project_id = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -76,6 +124,7 @@ class ProjectInfo(models.Model):
     qa = models.CharField(db_column='QA', max_length=255, blank=True, null=True)  # Field name made lowercase.
     hr = models.CharField(db_column='HR', max_length=255, blank=True, null=True)  # Field name made lowercase.
     hwpm = models.CharField(db_column='HWPM', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    omper = models.CharField(db_column='OMPer', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -83,6 +132,7 @@ class ProjectInfo(models.Model):
 
 
 class ProjectStatusInfo(models.Model):
+    key = models.AutoField(primary_key=True)
     date = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -94,7 +144,7 @@ class ProjectStatusInfo(models.Model):
     offset_num = models.CharField(max_length=255, blank=True, null=True)
     monthly_target = models.CharField(max_length=255, blank=True, null=True)
     urgency = models.CharField(db_column='Urgency', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    mouthly_reach = models.CharField(max_length=255, blank=True, null=True)
+    monthly_reach = models.CharField(max_length=255, blank=True, null=True)
     remarks = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -103,6 +153,7 @@ class ProjectStatusInfo(models.Model):
 
 
 class RecruitmentInfo(models.Model):
+    key = models.AutoField(primary_key=True)
     internal_id = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -131,6 +182,17 @@ class RecruitmentInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'recruitment_info'
+
+
+class TableCol(models.Model):
+    key = models.CharField(primary_key=True, max_length=255)
+    table_type = models.CharField(max_length=255, blank=True, null=True)
+    col = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'table_col'
 
 
 class UserInfo(models.Model):

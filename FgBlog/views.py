@@ -13,12 +13,17 @@ import openpyxl
 import xlrd
 import json
 import datetime
-
+from FgBlog.commonMethods import projectStatusMonthly
 
 
 def realHome(request):
     return render(request, 'index.html')
 
+
+def project_status_monthly(request):
+    if request.method == 'POST':
+        projectStatusMonthly()
+        return JsonResponse({'msg': 'startTask'}, safe=False)
 
 
 def studyInfo2(request):
@@ -32,23 +37,30 @@ def studyInfo2(request):
 
 def get_applicant_info(request):
     if request.method == 'POST':
-        data = json.loads(request.body.decode('utf-8'))
-        data = data.get('filterData')
-        if data:
-            print(data)
-            for i in list(data.keys()):
-                if data[i] == '':
-                    data.pop(i)
-            print(data)
-            target = models.ApplicantInfo.objects.filter(**data).order_by('-id')
+        req = json.loads(request.body.decode('utf-8'))
+        print(type(req))
+        print(req)
+        filterData = req.get('filterData')
+        filterRegion = req.get('filterRegion')
+        if filterData:
+            print(filterData)
+            for i in list(filterData.keys()):
+                if filterData[i] == '':
+                    filterData.pop(i)
+            target = models.ApplicantInfo.objects.filter(**filterData).order_by('-key')
+            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                print(f'region:{filterRegion}')
+                target = target.filter(region=filterRegion)
         else:
             print(1)
-            target = models.ApplicantInfo.objects.all().order_by('-id')
+            target = models.ApplicantInfo.objects.all().order_by('-key')
+            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                print(f'region:{filterRegion}')
+                target = target.filter(region=filterRegion)
         applicantList = []
         for index in range(len(target)):
             i = target[index]
             applicant = model_to_dict(i)
-            applicant['key'] = index
             for k in applicant.keys():
                 if applicant[k] is None:
                     applicant[k] = ''
@@ -57,35 +69,71 @@ def get_applicant_info(request):
         return JsonResponse(data, safe=False)
 
 
+def applicant_according_to_recruitment(request):
+    data = json.loads(request.body.decode('utf-8'))
+    recruitmentId = data.get('recruitmentId')
+    info = {}
+    totalTarget = models.ApplicantInfo.objects.all().filter(related=recruitmentId)
+    total = len(totalTarget)
+    fail = len(totalTarget.filter(process_status__icontains='fail')) if totalTarget.filter(
+        process_status__icontains='fail') else 0
+    done = len(totalTarget.filter(process_status__icontains='fellow')) if totalTarget.filter(
+        process_status__icontains='fellow') else 0
+    giveUp = len(totalTarget.filter(process_status__icontains='giveUp')) if totalTarget.filter(
+        process_status__icontains='giveUp') else 0
+    discuss = len(totalTarget.filter(process_status__icontains='discuss')) if totalTarget.filter(
+        process_status__icontains='discuss') else 0
+    standBy = len(totalTarget.filter(process_status__icontains='standBy')) if totalTarget.filter(
+        process_status__icontains='standBy') else 0
+    created = len(totalTarget.filter(process_status__icontains='created')) if totalTarget.filter(
+        process_status__icontains='created') else 0
+    filtering = len(totalTarget.filter(process_status__icontains='pass')) if totalTarget.filter(
+        process_status__icontains='pass') else 0
+    info['total'] = total
+    info['done'] = done
+    info['filtering'] = filtering + created + standBy + discuss
+    info['fail'] = fail
+    info['giveUp'] = giveUp
+    print(info)
+    return JsonResponse(info, safe=False)
+
+
 def get_recruitment_info(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body.decode('utf-8'))
-            data = data.get('filterData')
-            if data:
-                print(data)
-                for i in list(data.keys()):
-                    if data[i] == '':
-                        data.pop(i)
-                print(data)
-                target = models.RecruitmentInfo.objects.filter(**data).order_by('-id')
+            req = json.loads(request.body.decode('utf-8'))
+            print(type(req))
+            print(req)
+            filterData = req.get('filterData')
+            filterRegion = req.get('filterRegion')
+            if filterData:
+                print(filterData)
+                for i in list(filterData.keys()):
+                    if filterData[i] == '':
+                        filterData.pop(i)
+                print(filterData)
+                target = models.RecruitmentInfo.objects.filter(**filterData).order_by('-key')
+                if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                    print(f'region:{filterRegion}')
+                    target = target.filter(region=filterRegion)
             else:
                 print(1)
-                target = models.RecruitmentInfo.objects.all().order_by('-id')
-        except:
-            print(1)
-            target = models.RecruitmentInfo.objects.all().order_by('-id')
-        infoList = []
-        for index in range(len(target)):
-            i = target[index]
-            info = model_to_dict(i)
-            info['key'] = index
-            for k in info.keys():
-                if info[k] is None:
-                    info[k] = ''
-            infoList.append(info)
-        data = {'infoList': infoList}
-        return JsonResponse(data, safe=False)
+                target = models.RecruitmentInfo.objects.all().order_by('-key')
+                if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                    print(f'region:{filterRegion}')
+                    target = target.filter(region=filterRegion)
+            infoList = []
+            for index in range(len(target)):
+                i = target[index]
+                info = model_to_dict(i)
+                for k in info.keys():
+                    if info[k] is None:
+                        info[k] = ''
+                infoList.append(info)
+            data = {'infoList': infoList}
+            return JsonResponse(data, safe=False)
+        except Exception as e:
+            print(str(e))
 
 
 def get_file_list(request):
@@ -122,7 +170,15 @@ def get_department_list(request):
 
 def get_project_status_info(request):
     if request.method == 'POST':
-        target = models.ProjectStatusInfo.objects.all().order_by('-id')
+        req = json.loads(request.body.decode('utf-8'))
+        print(type(req))
+        print(req)
+        filterData = req.get('filterData')
+        filterRegion = req.get('filterRegion')
+        target = models.ProjectStatusInfo.objects.all().order_by('-key')
+        if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+            print(f'region:{filterRegion}')
+            target = target.filter(region=filterRegion)
         infoList = []
         for i in range(len(target)):
             ii = i
@@ -143,8 +199,7 @@ def get_project_status_info(request):
             else:
                 offset_num = int(offset_num)
             info = {
-                'key': ii,
-                'id': i.id,
+                'key': i.key,
                 'date': i.date,
                 'department': i.department,
                 'pdu': i.pdu,
@@ -156,11 +211,12 @@ def get_project_status_info(request):
                 'offset_num': i.offset_num,
                 'monthly_target': i.monthly_target,
                 'urgency': i.urgency,
-                'mouthly_reach': i.mouthly_reach,
-                'mouthly_target_reach': int(i.mouthly_reach)/int(i.monthly_target),
+                'monthly_reach': i.monthly_reach,
+                'monthly_target_reach': int(i.monthly_reach) / int(i.monthly_target) if int(
+                    i.monthly_target) != 0 else 0,
                 'remarks': i.remarks,
                 'project_num_all': offset_num + new_project_num,
-                'project_satisfaction': project_num/int(i.sow_num),
+                'project_satisfaction': project_num / int(i.sow_num) if int(i.sow_num) != 0 else 0,
             }
             infoList.append(info)
         data = {'infoList': infoList}
@@ -169,23 +225,31 @@ def get_project_status_info(request):
 
 def get_project_info(request):
     if request.method == 'POST':
-        data = json.loads(request.body.decode('utf-8'))
-        data = data.get('filterData')
-        if data:
-            print(data)
-            for i in list(data.keys()):
-                if data[i] == '':
-                    data.pop(i)
-            print(data)
-            target = models.ProjectInfo.objects.filter(**data)
+        req = json.loads(request.body.decode('utf-8'))
+        print(type(req))
+        print(req)
+        filterData = req.get('filterData')
+        filterRegion = req.get('filterRegion')
+        if filterData:
+            print(filterData)
+            for i in list(filterData.keys()):
+                if filterData[i] == '':
+                    filterData.pop(i)
+            print(filterData)
+            target = models.ProjectInfo.objects.filter(**filterData)
+            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                print(f'region:{filterRegion}')
+                target = target.filter(region=filterRegion)
         else:
             print(1)
             target = models.ProjectInfo.objects.all()
+            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                print(f'region:{filterRegion}')
+                target = target.filter(region=filterRegion)
         infoList = []
         for index in range(len(target)):
             i = target[index]
             info = model_to_dict(i)
-            info['key'] = index
             for k in info.keys():
                 if info[k] is None:
                     info[k] = ''
@@ -201,17 +265,56 @@ def update_applicant_info(request):
         print(type(data))
         print(data)
         for k in list(data.keys()):
-            if not data[k]:
+            if not data[k] and data[k] != 0:
                 del data[k]
         print(type(data))
         print(data)
-        try:
-            data.pop('key')
-        except:
-            print("don't have key")
-        target = models.ApplicantInfo.objects.filter(id=data['id'])
+        key = data['key']
+        print(key)
+        data.pop('key')
+        print(data)
+        target = models.ApplicantInfo.objects.filter(key=key)
         target.update(**data)
         res = {'infoList': '11111'}
+        return JsonResponse(res, safe=False)
+
+
+def get_columns(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        tableType = data.get('tableType')
+        print(type(tableType))
+        print(tableType)
+        target = models.TableCol.objects.filter(table_type=tableType)
+        dataIndexList = target[0].col.split(',')
+        print(dataIndexList)
+        nameList = target[0].name.split(',')
+        print(nameList)
+        columns = []
+        try:
+            columns = [
+            ]
+            for index in range(len(dataIndexList)):
+
+                i = {
+                    'title': nameList[index],
+                    'dataIndex': dataIndexList[index],
+                    'width': 200,
+                    'scopedSlots': {'customRender': dataIndexList[index]},
+                }
+                columns.append(i)
+            a = {
+                    'title': 'operation',
+                    'dataIndex': 'operation',
+                    'fixed': 'right',
+                    'scopedSlots': {'customRender': 'operation'},
+                    'width': 130,
+                }
+            columns.append(a)
+            print(columns)
+        except:
+            print("internal_error")
+        res = {'columns': columns}
         return JsonResponse(res, safe=False)
 
 
@@ -264,7 +367,7 @@ def login(request):
                     'nickname': target[0].nickname,
                     'region': target[0].region,
                     'level': target[0].level
-               }
+                }
                 return JsonResponse(res)
         except:
             res = {'msg': '内部错误'}
@@ -300,7 +403,6 @@ def batchInputExcel(path, excelType):
             models.RecruitmentInfo.objects.create(**target)
 
 
-
 def save_excel(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
@@ -322,8 +424,16 @@ def update_recruitment_info(request):
         data = data.get('data')
         print(type(data))
         print(data)
+        for k in list(data.keys()):
+            if not data[k] and data[k] != 0:
+                del data[k]
+        print(type(data))
+        print(data)
+        key = data['key']
+        print(key)
         data.pop('key')
-        target = models.RecruitmentInfo.objects.filter(id=data['id'])
+        print(data)
+        target = models.RecruitmentInfo.objects.filter(key=key)
         target.update(**data)
         res = {'infoList': '11111'}
         return JsonResponse(res, safe=False)
@@ -335,8 +445,16 @@ def update_project_info(request):
         data = data.get('data')
         print(type(data))
         print(data)
+        for k in list(data.keys()):
+            if not data[k] and data[k] != 0:
+                del data[k]
+        print(type(data))
+        print(data)
+        key = data['key']
+        print(key)
         data.pop('key')
-        target = models.ProjectInfo.objects.filter(id=data['id'])
+        print(data)
+        target = models.ProjectInfo.objects.filter(key=key)
         target.update(**data)
         res = {'infoList': '11111'}
         return JsonResponse(res, safe=False)
@@ -344,15 +462,35 @@ def update_project_info(request):
 
 def update_project_status(request):
     if request.method == 'POST':
+        # data = json.loads(request.body.decode('utf-8'))
+        # data = data.get('data')
+        # print(type(data))
+        # print(data)
+        # data.pop('key')
+        # data.pop('project_satisfaction')
+        # data.pop('project_num_all')
+        # data.pop('mouthly_target_reach')
+        # target = models.ProjectStatusInfo.objects.filter(id=data['id'])
+        # target.update(**data)
+        # res = {'infoList': '11111'}
+        # return JsonResponse(res, safe=False)
         data = json.loads(request.body.decode('utf-8'))
         data = data.get('data')
         print(type(data))
         print(data)
-        data.pop('key')
+        for k in list(data.keys()):
+            if not data[k] and data[k] != 0:
+                del data[k]
         data.pop('project_satisfaction')
         data.pop('project_num_all')
         data.pop('mouthly_target_reach')
-        target = models.ProjectStatusInfo.objects.filter(id=data['id'])
+        print(type(data))
+        print(data)
+        key = data['key']
+        print(key)
+        data.pop('key')
+        print(data)
+        target = models.ProjectStatusInfo.objects.filter(key=key)
         target.update(**data)
         res = {'infoList': '11111'}
         return JsonResponse(res, safe=False)

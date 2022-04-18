@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'hr_manage_db'
 ]
 
@@ -91,6 +92,8 @@ DATABASES = {
     }
 }
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -131,7 +134,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "FgBlog/dist/static"),
 ]
 
-
+# 定时任务
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    ('00 03 * * *', 'FgBlog.dailyTask.project_status_monthly')
+]
 
 '''
 1、设置跨域白名单
