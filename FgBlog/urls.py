@@ -33,6 +33,7 @@ urlpatterns = [
     re_path(r'^vpn.*', TemplateView.as_view(template_name='index.html')),
     re_path(r'^hrManageTable.*', TemplateView.as_view(template_name='index.html')),
     re_path(r'^hrManage.*', TemplateView.as_view(template_name='index.html')),
+    re_path(r'^projectManager.*', TemplateView.as_view(template_name='index.html')),
     # path('admin/', admin.site.urls),
     path('get_applicant_info/', views.get_applicant_info),
     path('get_recruitment_info/', views.get_recruitment_info),
@@ -51,6 +52,7 @@ urlpatterns = [
     path('save_excel/', views.save_excel),
     path('applicant_according_to_recruitment/', views.applicant_according_to_recruitment),
     path('get_columns/', views.get_columns),
+    path('get_common_data/', views.get_common_data),
     path('login/', views.login),
 
 ]

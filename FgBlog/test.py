@@ -120,5 +120,79 @@ def projectStatusMonthly():
         models.ProjectStatusInfo.objects.create(**newDict)
 
 
+def selectPicData1(region, pdu, recommender):
+    # target = models.ApplicantInfo.objects.all()
+    filterData = {}
+    if region:
+        filterData['region'] = region
+    if pdu:
+        filterData['pdu'] = pdu
+    if recommender:
+        filterData['recommender'] = recommender
+    target = models.ApplicantInfo.objects.all().filter(**filterData)
+    List1 = []
+    List2 = []
+    List3 = []
+    List4 = []
+    for i in target:
+        if i.process_status and i.resume_status:
+            # print(i.name)
+            if i.resume_status == 'open':
+                if i.process_status == 'created':
+                    msg = '创建'
+                    List1.append(i.name)
+                else:
+                    msg = '流程中'
+                    List2.append(i.name)
+            else:
+                msg = ''
+                if i.process_status == 'fellow':
+                    msg = '已入职'
+                    List3.append(i.name)
+                else:
+                    msg = '淘汰'
+                    List4.append(i.name)
+            # print(f'状态-{msg}')
+        else:
+            print('数据错误')
+    a = {
+        '创建': List1,
+        '流程中': List2,
+        '已入职': List3,
+        '淘汰': List4,
+    }
+    # print('创建', List1)
+    # print('流程中', List2)
+    # print('已入职', List3)
+    # print('淘汰', List4)
+    return a
+
+
+def selectDepartment(department):
+    target = models.PduInfo.objects.filter(department=department)
+    pduList = []
+    for i in target:
+        pduList.append(i.pdu)
+    print(department)
+    return pduList
+
+
+def getPicData2(department):
+    pduList = selectDepartment(department)
+    print(pduList)
+    picDataList = []
+    for i in pduList:
+        region = None
+        recommender = None
+        pdu = i
+        print(i)
+        a = {'y': selectPicData1(region, pdu, recommender), 'x': i}
+        picDataList.append(a)
+        print(a)
+
+    print(datetime.datetime.now())
+    print(picDataList)
+
+
 if __name__ == '__main__':
-    projectStatusMonthly()
+    print(datetime.datetime.now())

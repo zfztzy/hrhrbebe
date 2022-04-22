@@ -66,6 +66,7 @@ class DjangoMigrations(models.Model):
 
 
 class PduInfo(models.Model):
+    key = models.AutoField(primary_key=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     hwpdu_leader = models.CharField(db_column='HWPDU_Leader', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -125,6 +126,7 @@ class ProjectInfo(models.Model):
     hr = models.CharField(db_column='HR', max_length=255, blank=True, null=True)  # Field name made lowercase.
     hwpm = models.CharField(db_column='HWPM', max_length=255, blank=True, null=True)  # Field name made lowercase.
     omper = models.CharField(db_column='OMPer', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    type = models.CharField(db_column='Type', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -158,6 +160,7 @@ class RecruitmentInfo(models.Model):
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     project = models.CharField(max_length=255, blank=True, null=True)
+    type2 = models.CharField(max_length=255, blank=True, null=True)
     position_attribute = models.CharField(max_length=255, blank=True, null=True)
     skill_keyword = models.CharField(max_length=255, blank=True, null=True)
     requirements = models.TextField(blank=True, null=True)
@@ -210,7 +213,13 @@ class UserInfo(models.Model):
 class UserLevel(models.Model):
     level = models.IntegerField(primary_key=True)
     hr_manage = models.IntegerField(blank=True, null=True)
+    project_manage = models.IntegerField(blank=True, null=True)
+    kpi = models.IntegerField(db_column='KPI', blank=True, null=True)  # Field name made lowercase.
+    staff = models.IntegerField(blank=True, null=True)
+    business = models.IntegerField(blank=True, null=True)
+    list = models.IntegerField(blank=True, null=True)
     sign_up = models.IntegerField(blank=True, null=True)
+    remark = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False

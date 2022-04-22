@@ -18,7 +18,7 @@ def getFileList(excelType):
     if excelType == 'ApplicantInfo':
         excelTypeName = '候选人管理'
     if excelType == 'ProjectInfo':
-        excelTypeName = '招聘看板'
+        excelTypeName = '项目信息'
     if excelType == 'ProjectStatusInfo':
         excelTypeName = '项目满足度'
     if excelType == 'RecruitmentInfo':
@@ -50,7 +50,7 @@ def newDownloadExcel(excelType):
     if excelType == 'ProjectInfo':
         dbTarget = models.ProjectInfo
         target = models.ProjectInfo
-        excelTypeName = '招聘看板'
+        excelTypeName = '项目信息'
     if excelType == 'ProjectStatusInfo':
         dbTarget = models.ProjectStatusInfo
         target = models.ProjectStatusInfo

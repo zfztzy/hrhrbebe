@@ -180,9 +180,18 @@ def get_project_status_info(request):
             print(f'region:{filterRegion}')
             target = target.filter(region=filterRegion)
         infoList = []
+        date = str(datetime.date.today())
+        print(date)
+        # date = '2022-04-04'
+        date = date.replace('-', '')
+        yearMonth = date[:6]
         for i in range(len(target)):
             ii = i
             i = target[i]
+            if i.date == yearMonth:
+                canEdit = True
+            else:
+                canEdit = False
             project_num = i.project_num
             if project_num == '':
                 project_num = 0
@@ -212,11 +221,12 @@ def get_project_status_info(request):
                 'monthly_target': i.monthly_target,
                 'urgency': i.urgency,
                 'monthly_reach': i.monthly_reach,
-                'monthly_target_reach': int(i.monthly_reach) / int(i.monthly_target) if int(
+                'monthly_target_reach': int(i.monthly_reach) / int(i.monthly_target) if i.monthly_target != '' and int(
                     i.monthly_target) != 0 else 0,
                 'remarks': i.remarks,
                 'project_num_all': offset_num + new_project_num,
                 'project_satisfaction': project_num / int(i.sow_num) if int(i.sow_num) != 0 else 0,
+                'canEdit': canEdit
             }
             infoList.append(info)
         data = {'infoList': infoList}
@@ -254,8 +264,22 @@ def get_project_info(request):
                 if info[k] is None:
                     info[k] = ''
             infoList.append(info)
-        data = {'infoList': infoList}
+        data = {'tableData': infoList}
         return JsonResponse(data, safe=False)
+
+
+def get_pdu_info(request):
+    if request.method == 'POST':
+        req = json.loads(request.body.decode('utf-8'))
+        print(type(req))
+        print(req)
+        filterRegion = req.get('filterRegion')
+        target = models.PduInfo.objects.all()
+        pduList = []
+        for i in target:
+            pduList.append(model_to_dict(i))
+        res = {'tableData': pduList}
+        return JsonResponse(res, safe=False)
 
 
 def update_applicant_info(request):
@@ -424,6 +448,11 @@ def update_recruitment_info(request):
         data = data.get('data')
         print(type(data))
         print(data)
+        data.pop('total')
+        data.pop('fail')
+        data.pop('filtering')
+        data.pop('giveUp')
+        data.pop('done')
         for k in list(data.keys()):
             if not data[k] and data[k] != 0:
                 del data[k]
@@ -454,10 +483,16 @@ def update_project_info(request):
         print(key)
         data.pop('key')
         print(data)
-        target = models.ProjectInfo.objects.filter(key=key)
-        target.update(**data)
-        res = {'infoList': '11111'}
-        return JsonResponse(res, safe=False)
+        if key != 0:
+            target = models.ProjectInfo.objects.filter(key=key)
+            target.update(**data)
+            res = {'infoList': '11111'}
+            return JsonResponse(res, safe=False)
+        else:
+            target = models.ProjectInfo.objects
+            target.update_or_create(**data)
+            res = {'infoList': '11111'}
+            return JsonResponse(res, safe=False)
 
 
 def update_project_status(request):
@@ -483,7 +518,8 @@ def update_project_status(request):
                 del data[k]
         data.pop('project_satisfaction')
         data.pop('project_num_all')
-        data.pop('mouthly_target_reach')
+        data.pop('monthly_target_reach')
+        data.pop('canEdit')
         print(type(data))
         print(data)
         key = data['key']
@@ -495,6 +531,18 @@ def update_project_status(request):
         res = {'infoList': '11111'}
         return JsonResponse(res, safe=False)
 
+
+def get_common_data(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        tableType = data.get('tableType')
+        print(type(tableType))
+        print(tableType)
+        if tableType == 'project_info':
+            res = get_project_info(request)
+        if tableType == 'pdu_info' or tableType == 'pdu_info2':
+            res = get_pdu_info(request)
+        return res
 # Anaconda
 # export PATH=$PATH:/home/fg/anaconda3/bin
 
