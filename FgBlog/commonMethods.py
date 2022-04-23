@@ -32,3 +32,12 @@ def projectStatusMonthly():
         newDict['monthly_reach'] = '0'
         print(newDict)
         models.ProjectStatusInfo.objects.create(**newDict)
+
+
+def selectDepartment(department):
+    target = models.PduInfo.objects.filter(department=department)
+    pduList = []
+    for i in target:
+        pduList.append(i.pdu)
+    print(department)
+    return pduList

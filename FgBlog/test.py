@@ -195,4 +195,5 @@ def getPicData2(department):
 
 
 if __name__ == '__main__':
-    print(datetime.datetime.now())
+    a = selectDepartment('海思半导体')
+    print(a)

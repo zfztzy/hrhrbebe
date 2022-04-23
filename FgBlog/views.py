@@ -14,6 +14,7 @@ import xlrd
 import json
 import datetime
 from FgBlog.commonMethods import projectStatusMonthly
+from FgBlog.commonMethods import selectDepartment
 
 
 def realHome(request):
@@ -173,9 +174,13 @@ def get_project_status_info(request):
         req = json.loads(request.body.decode('utf-8'))
         print(type(req))
         print(req)
-        filterData = req.get('filterData')
+        selectDate = req.get('selectDate')
         filterRegion = req.get('filterRegion')
-        target = models.ProjectStatusInfo.objects.all().order_by('-key')
+        if selectDate:
+            print(selectDate)
+            target = models.ProjectStatusInfo.objects.all().filter(date=selectDate).order_by('-key')
+        else:
+            target = models.ProjectStatusInfo.objects.all().order_by('-key')
         if filterRegion and filterRegion != 'null' and filterRegion != 'all':
             print(f'region:{filterRegion}')
             target = target.filter(region=filterRegion)
@@ -367,6 +372,17 @@ def create_applicant_info(request):
         target = models.ApplicantInfo.objects
         target.create(**data)
         res = {'msg': '新增成功'}
+        return JsonResponse(res)
+
+
+def get_pdu_list(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        department = data.get('department')
+        print(type(department))
+        print(department)
+        pduList = selectDepartment(department)
+        res = {'pduList': pduList}
         return JsonResponse(res)
 
 
