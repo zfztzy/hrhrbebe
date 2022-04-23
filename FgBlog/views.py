@@ -282,6 +282,20 @@ def get_pdu_info(request):
         return JsonResponse(res, safe=False)
 
 
+def get_po_info(request):
+    if request.method == 'POST':
+        req = json.loads(request.body.decode('utf-8'))
+        print(type(req))
+        print(req)
+        filterRegion = req.get('filterRegion')
+        target = models.PoInfo.objects.all()
+        poList = []
+        for i in target:
+            poList.append(model_to_dict(i))
+        res = {'tableData': poList}
+        return JsonResponse(res, safe=False)
+
+
 def update_applicant_info(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
@@ -314,6 +328,8 @@ def get_columns(request):
         print(dataIndexList)
         nameList = target[0].name.split(',')
         print(nameList)
+        widthList = target[0].width.split(',')
+        print(widthList)
         columns = []
         try:
             columns = [
@@ -323,7 +339,7 @@ def get_columns(request):
                 i = {
                     'title': nameList[index],
                     'dataIndex': dataIndexList[index],
-                    'width': 200,
+                    'width': widthList[index],
                     'scopedSlots': {'customRender': dataIndexList[index]},
                 }
                 columns.append(i)
@@ -536,12 +552,15 @@ def get_common_data(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         tableType = data.get('tableType')
+        res = JsonResponse({'msg': 'error'}, safe=False)
         print(type(tableType))
         print(tableType)
         if tableType == 'project_info':
             res = get_project_info(request)
-        if tableType == 'pdu_info' or tableType == 'pdu_info2':
+        if tableType == 'pdu_info' :
             res = get_pdu_info(request)
+        if tableType == 'po_info' or tableType == 'po_list':
+            res = get_po_info(request)
         return res
 # Anaconda
 # export PATH=$PATH:/home/fg/anaconda3/bin

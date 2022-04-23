@@ -82,6 +82,7 @@ class PduInfo(models.Model):
 
 
 class PoInfo(models.Model):
+    key = models.AutoField(primary_key=True)
     project_po = models.CharField(max_length=255, blank=True, null=True)
     po_name = models.CharField(max_length=255, blank=True, null=True)
     business = models.CharField(max_length=255, blank=True, null=True)
@@ -192,6 +193,7 @@ class TableCol(models.Model):
     table_type = models.CharField(max_length=255, blank=True, null=True)
     col = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
+    width = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
