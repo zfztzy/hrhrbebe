@@ -221,6 +221,14 @@ class UserLevel(models.Model):
     business = models.IntegerField(blank=True, null=True)
     list = models.IntegerField(blank=True, null=True)
     sign_up = models.IntegerField(blank=True, null=True)
+    pduinfo = models.IntegerField(blank=True, null=True)
+    applicant = models.IntegerField(blank=True, null=True)
+    recruitment = models.IntegerField(blank=True, null=True)
+    pojectstatus = models.IntegerField(blank=True, null=True)
+    recruitchart = models.IntegerField(blank=True, null=True)
+    projectmanager = models.IntegerField(blank=True, null=True)
+    projectinfo = models.IntegerField(blank=True, null=True)
+    poinfo = models.IntegerField(blank=True, null=True)
     remark = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:

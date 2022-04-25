@@ -24,12 +24,6 @@ def projectStatusMonthly():
         newDict = i.copy()
         newDict.pop('key')
         newDict['date'] = yearMonth
-        newDict['sow_num'] = '0'
-        newDict['project_num'] = '0'
-        newDict['new_project_num'] = '0'
-        newDict['offset_num'] = '0'
-        newDict['monthly_target'] = '0'
-        newDict['monthly_reach'] = '0'
         print(newDict)
         models.ProjectStatusInfo.objects.create(**newDict)
 

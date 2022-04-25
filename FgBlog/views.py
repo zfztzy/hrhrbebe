@@ -344,7 +344,7 @@ def get_columns(request):
                 i = {
                     'title': nameList[index],
                     'dataIndex': dataIndexList[index],
-                    'width': widthList[index],
+                    'width': int(widthList[index]),
                     'scopedSlots': {'customRender': dataIndexList[index]},
                 }
                 columns.append(i)
@@ -424,6 +424,9 @@ def login(request):
                     'region': target[0].region,
                     'level': target[0].level
                 }
+                target = models.UserLevel.objects.filter(level=res['level'])[0]
+                limits = model_to_dict(target)
+                res['limits'] = limits
                 return JsonResponse(res)
         except:
             res = {'msg': '内部错误'}

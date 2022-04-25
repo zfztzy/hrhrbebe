@@ -194,6 +194,120 @@ def getPicData2(department):
     print(picDataList)
 
 
+def get_status_object(date):
+    target = models.ProjectStatusInfo.objects.filter(date=date)
+    pduList = models.ProjectStatusInfo.objects.values('pdu').distinct()
+    pduTotal = {}
+    pduReach = {}
+    pduTarget = {}
+    for pdu in pduList:
+        pdu = pdu['pdu']
+        for i in target:
+            if i.pdu == pdu:
+                try:
+                    pduTotal[pdu] += int(i.new_project_num)
+                except:
+                    pduTotal[pdu] = int(i.new_project_num)
+                try:
+                    pduTotal[pdu] += int(i.offset_num)
+                except:
+                    pduTotal[pdu] = int(i.offset_num)
+                try:
+                    pduReach[pdu] += int(i.monthly_reach)
+                except:
+                    pduReach[pdu] = int(i.monthly_reach)
+                try:
+                    pduTarget[pdu] += int(i.monthly_target)
+                except:
+                    pduTarget[pdu] = int(i.monthly_target)
+    return pduTotal, pduReach, pduTarget
+
+
+def get_status_object2(date):
+    target = models.ProjectStatusInfo.objects.filter(date=date)
+    regionList = models.ProjectStatusInfo.objects.values('region').distinct()
+    departmentList1Total = {}
+    departmentList1Reach = {}
+    departmentList1Target = {}
+    departmentList2Total = {}
+    departmentList2Reach = {}
+    departmentList2Target = {}
+    for region in regionList:
+        region = region['region']
+        for i in target:
+            if i.region == region and i.department == '海思半导体':
+                try:
+                    departmentList1Total[region] += int(i.new_project_num)
+                except:
+                    departmentList1Total[region] = int(i.new_project_num)
+                try:
+                    departmentList1Total[region] += int(i.offset_num)
+                except:
+                    departmentList1Total[region] = int(i.offset_num)
+                try:
+                    departmentList1Reach[region] += int(i.monthly_reach)
+                except:
+                    departmentList1Reach[region] = int(i.monthly_reach)
+                try:
+                    departmentList1Target[region] += int(i.monthly_target)
+                except:
+                    departmentList1Target[region] = int(i.monthly_target)
+            elif i.region == region and i.department == '上海海思':
+                try:
+                    departmentList2Total[region] += int(i.new_project_num)
+                except:
+                    departmentList2Total[region] = int(i.new_project_num)
+                try:
+                    departmentList2Total[region] += int(i.offset_num)
+                except:
+                    departmentList2Total[region] = int(i.offset_num)
+                try:
+                    departmentList2Reach[region] += int(i.monthly_reach)
+                except:
+                    departmentList2Reach[region] = int(i.monthly_reach)
+                try:
+                    departmentList2Target[region] += int(i.monthly_target)
+                except:
+                    departmentList2Target[region] = int(i.monthly_target)
+    return departmentList1Total, departmentList1Reach, departmentList1Target, departmentList2Total, departmentList2Reach, departmentList2Target
+
+
 if __name__ == '__main__':
-    a = selectDepartment('海思半导体')
-    print(a)
+    # pduList = selectDepartment('海思半导体')
+    # pduValueList = get_status_object('202203')
+    # xData = []
+    # series1 = []
+    # series2 = []
+    # series3 = []
+    # for i in pduList:
+    #     xData.append(i)
+    #     series1.append(pduValueList[0][i])
+    #     series2.append(pduValueList[1][i])
+    #     series3.append(pduValueList[1][i]/pduValueList[2][i])
+    # print(xData)
+    # print(series1)
+    # print(series2)
+    # print(series3)
+    regionValueList = get_status_object2('202203')
+    for i in regionValueList:
+        print(i)
+    xData = []
+    series1 = []
+    series2 = []
+    series3 = []
+    for key in regionValueList[0]:
+        xData.append(key + ' / 海思半导体')
+        series1.append(regionValueList[0][key])
+        series2.append(regionValueList[1][key])
+        series3.append(regionValueList[1][key]/regionValueList[2][key])
+    for key in regionValueList[3]:
+        xData.append(key + ' / 上海海思')
+        series1.append(regionValueList[3][key])
+        series2.append(regionValueList[4][key])
+        series3.append(regionValueList[4][key]/regionValueList[5][key])
+    print(xData)
+    print(series1)
+    print(series2)
+    print(series3)
+
+
