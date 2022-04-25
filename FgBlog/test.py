@@ -272,42 +272,120 @@ def get_status_object2(date):
     return departmentList1Total, departmentList1Reach, departmentList1Target, departmentList2Total, departmentList2Reach, departmentList2Target
 
 
-if __name__ == '__main__':
-    # pduList = selectDepartment('海思半导体')
-    # pduValueList = get_status_object('202203')
-    # xData = []
-    # series1 = []
-    # series2 = []
-    # series3 = []
-    # for i in pduList:
-    #     xData.append(i)
-    #     series1.append(pduValueList[0][i])
-    #     series2.append(pduValueList[1][i])
-    #     series3.append(pduValueList[1][i]/pduValueList[2][i])
-    # print(xData)
-    # print(series1)
-    # print(series2)
-    # print(series3)
-    regionValueList = get_status_object2('202203')
-    for i in regionValueList:
-        print(i)
-    xData = []
+def get_final_pic_value(date):
+    pduList = selectDepartment('海思半导体')
+    pduValueList = get_status_object(date)
+    xData1 = []
     series1 = []
     series2 = []
     series3 = []
+    for i in pduList:
+        try:
+            xData1.append(i)
+            series1.append(pduValueList[0][i])
+            series2.append(pduValueList[1][i])
+            # series3.append(pduValueList[1][i]/pduValueList[2][i] if pduValueList[2][i] != 0 else 0)
+            try:
+                series3.append(pduValueList[1][i]/pduValueList[2][i])
+            except Exception as e:
+                series3.append(0)
+                print(str(e))
+        except:
+            print(f'当前日期没有pdu:{i}')
+    pduList = selectDepartment('上海海思')
+    # pduValueList = get_status_object(date)
+    xData2 = []
+    series4 = []
+    series5 = []
+    series6 = []
+    for i in pduList:
+        try:
+            xData2.append(i)
+            series4.append(pduValueList[0][i])
+            series5.append(pduValueList[1][i])
+            # series3.append(pduValueList[1][i]/pduValueList[2][i] if pduValueList[2][i] != 0 else 0)
+            try:
+                series6.append(pduValueList[1][i]/pduValueList[2][i])
+            except Exception as e:
+                series6.append(0)
+                print(str(e))
+        except:
+            print(f'当前日期没有pdu:{i}')
+    regionValueList = get_status_object2(date)
+    xData3 = []
+    series7 = []
+    series8 = []
+    series9 = []
+    xData4 = []
+    series10 = []
+    series11 = []
+    series12 = []
     for key in regionValueList[0]:
-        xData.append(key + ' / 海思半导体')
-        series1.append(regionValueList[0][key])
-        series2.append(regionValueList[1][key])
-        series3.append(regionValueList[1][key]/regionValueList[2][key])
+        try:
+            xData3.append(key + ' / 海思半导体')
+            series7.append(regionValueList[0][key])
+            series8.append(regionValueList[1][key])
+            # series9.append(regionValueList[1][key]/regionValueList[2][key] if pduValueList[2][key] != 0 else 0)
+            try:
+                series9.append(regionValueList[1][key]/regionValueList[2][key])
+            except Exception as e:
+                series9.append(0)
+                print(str(e))
+        except Exception as e:
+            print(str(e))
     for key in regionValueList[3]:
-        xData.append(key + ' / 上海海思')
-        series1.append(regionValueList[3][key])
-        series2.append(regionValueList[4][key])
-        series3.append(regionValueList[4][key]/regionValueList[5][key])
-    print(xData)
-    print(series1)
-    print(series2)
-    print(series3)
+        try:
+            xData4.append(key + ' / 上海海思')
+            series10.append(regionValueList[3][key])
+            series11.append(regionValueList[4][key])
+            # series12.append(regionValueList[4][key]/regionValueList[5][key] if pduValueList[2][key] != 0 else 0)
+            try:
+                series12.append(regionValueList[1][key]/regionValueList[2][key])
+            except Exception as e:
+                series12.append(0)
+                print(str(e))
+        except Exception as e:
+            print(str(e))
+    # print('###############\n###############')
+    # print(xData1)
+    # print(series1)
+    # print(series2)
+    # print(series3)
+    # print(xData2)
+    # print(series4)
+    # print(series5)
+    # print(series6)
+    # print(xData3)
+    # print(series7)
+    # print(series8)
+    # print(series9)
+    # print(xData4)
+    # print(series10)
+    # print(series11)
+    # print(series12)
+    res = {
+        '海思半导体pduXData': xData1,
+        '海思半导体pdu剩余需求数': series1,
+        '海思半导体pdu月度满足数': series2,
+        '海思半导体pdu月度满足度': series3,
+        '上海海思pduXData': xData2,
+        '上海海思pdu剩余需求数': series4,
+        '上海海思pdu月度满足数': series5,
+        '上海海思pdu月度满足度': series6,
+        '海思半导体地域xData': xData3,
+        '海思半导体地域剩余需求数': series7,
+        '海思半导体地域月度满足数': series8,
+        '海思半导体地域月度满足度': series9,
+        '上海海思地域xData': xData4,
+        '上海海思地域剩余需求数': series10,
+        '上海海思地域月度满足数': series11,
+        '上海海思地域月度满足度': series12,
+    }
+    return res
+
+
+if __name__ == '__main__':
+    regionList = models.ProjectStatusInfo.objects.values('region').distinct()
+
 
 

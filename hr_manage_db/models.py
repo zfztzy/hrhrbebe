@@ -126,7 +126,8 @@ class ProjectInfo(models.Model):
     qa = models.CharField(db_column='QA', max_length=255, blank=True, null=True)  # Field name made lowercase.
     hr = models.CharField(db_column='HR', max_length=255, blank=True, null=True)  # Field name made lowercase.
     hwpm = models.CharField(db_column='HWPM', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    omper = models.CharField(db_column='OMPer', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    omper = models.CharField(db_column='OMPer', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pm2 = models.CharField(db_column='PM2', max_length=255, blank=True, null=True)  # Field name made lowercase.
     type = models.CharField(db_column='Type', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
@@ -139,6 +140,7 @@ class ProjectStatusInfo(models.Model):
     date = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    po_num = models.CharField(db_column='PO_NUM', max_length=100, blank=True, null=True)  # Field name made lowercase.
     project = models.CharField(max_length=255, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True)
     sow_num = models.CharField(max_length=255, blank=True, null=True)
@@ -214,6 +216,7 @@ class UserInfo(models.Model):
 
 class UserLevel(models.Model):
     level = models.IntegerField(primary_key=True)
+    remark = models.CharField(max_length=100, blank=True, null=True)
     hr_manage = models.IntegerField(blank=True, null=True)
     project_manage = models.IntegerField(blank=True, null=True)
     kpi = models.IntegerField(db_column='KPI', blank=True, null=True)  # Field name made lowercase.
@@ -229,7 +232,6 @@ class UserLevel(models.Model):
     projectmanager = models.IntegerField(blank=True, null=True)
     projectinfo = models.IntegerField(blank=True, null=True)
     poinfo = models.IntegerField(blank=True, null=True)
-    remark = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False

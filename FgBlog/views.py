@@ -15,6 +15,7 @@ import json
 import datetime
 from FgBlog.commonMethods import projectStatusMonthly
 from FgBlog.commonMethods import selectDepartment
+from FgBlog.commonMethods import get_final_pic_value
 
 
 def realHome(request):
@@ -217,6 +218,7 @@ def get_project_status_info(request):
                 'date': i.date,
                 'department': i.department,
                 'pdu': i.pdu,
+                'po_num': i.po_num,
                 'project': i.project,
                 'region': i.region,
                 'sow_num': i.sow_num,
@@ -528,6 +530,22 @@ def update_project_info(request):
             target.update_or_create(**data)
             res = {'infoList': '11111'}
             return JsonResponse(res, safe=False)
+
+
+def get_status_pic_value(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        data = data.get('selectDate')
+        print(type(data))
+        print(data)
+        if not data:
+            data = str(datetime.date.today()).split('-')
+            data = data[0] + data[1]
+            print('########')
+            print(data)
+        value = get_final_pic_value(data)
+        res = {'picData': value}
+        return JsonResponse(res, safe=False)
 
 
 def update_project_status(request):
