@@ -16,6 +16,7 @@ import datetime
 from FgBlog.commonMethods import projectStatusMonthly
 from FgBlog.commonMethods import selectDepartment
 from FgBlog.commonMethods import get_final_pic_value
+from FgBlog.commonMethods import getPicData2
 
 
 def realHome(request):
@@ -194,7 +195,7 @@ def get_project_status_info(request):
         for i in range(len(target)):
             ii = i
             i = target[i]
-            if i.date == yearMonth:
+            if i.date == yearMonth or int(i.date) > int(yearMonth):
                 canEdit = True
             else:
                 canEdit = False
@@ -383,7 +384,7 @@ def get_pdu_list(request):
         department = data.get('department')
         print(type(department))
         print(department)
-        pduList = selectDepartment(department)
+        pduList = selectDepartment(department, None)
         res = {'pduList': pduList}
         return JsonResponse(res)
 
@@ -585,6 +586,26 @@ def update_project_status(request):
         return JsonResponse(res, safe=False)
 
 
+def get_applicant_pic(request):
+    if request.method == 'POST':
+        req = json.loads(request.body.decode('utf-8'))
+        print(req)
+        print(type(req))
+        picValue = getPicData2(req)
+        res = {'picValue': picValue}
+        return JsonResponse(res, safe=False)
+
+
+def get_applicant_region(request):
+    if request.method == 'POST':
+        regionList = models.ApplicantInfo.objects.values('region').distinct()
+        regionList2 = []
+        for i in regionList:
+            regionList2.append(i['region'])
+        res = {'regionList': regionList2}
+        return JsonResponse(res, safe=False)
+
+
 def get_common_data(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
@@ -594,7 +615,7 @@ def get_common_data(request):
         print(tableType)
         if tableType == 'project_info':
             res = get_project_info(request)
-        if tableType == 'pdu_info' :
+        if tableType == 'pdu_info':
             res = get_pdu_info(request)
         if tableType == 'po_info' or tableType == 'po_list':
             res = get_po_info(request)

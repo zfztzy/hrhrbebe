@@ -140,16 +140,16 @@ class ProjectStatusInfo(models.Model):
     date = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    po_num = models.CharField(db_column='PO_NUM', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    po_num = models.CharField(db_column='PO_NUM', max_length=255, blank=True, null=True)  # Field name made lowercase.
     project = models.CharField(max_length=255, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True)
-    sow_num = models.CharField(max_length=255, blank=True, null=True)
-    project_num = models.CharField(max_length=255, blank=True, null=True)
-    new_project_num = models.CharField(max_length=255, blank=True, null=True)
-    offset_num = models.CharField(max_length=255, blank=True, null=True)
-    monthly_target = models.CharField(max_length=255, blank=True, null=True)
+    sow_num = models.IntegerField(blank=True, null=True)
+    project_num = models.IntegerField(blank=True, null=True)
+    new_project_num = models.IntegerField(blank=True, null=True)
+    offset_num = models.IntegerField(blank=True, null=True)
+    monthly_target = models.IntegerField(blank=True, null=True)
     urgency = models.CharField(db_column='Urgency', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    monthly_reach = models.CharField(max_length=255, blank=True, null=True)
+    monthly_reach = models.IntegerField(blank=True, null=True)
     remarks = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:

@@ -18,6 +18,7 @@ import datetime
 import time
 import datetime
 from django.forms.models import model_to_dict
+from dateutil.relativedelta import relativedelta
 
 
 
@@ -90,12 +91,12 @@ def applicant_according_to_recruitment(recruitmentId):
 
 
 def projectStatusMonthly():
-    date = str(datetime.date.today())
+    date = str(datetime.date.today() + relativedelta(months=1))
     print(date)
     # date = '2022-04-04'
-    if date[-2:] != '04':
-        print(date[-2:])
-        return
+    # if date[-2:] != '04':
+    #     print(date[-2:])
+    #     return
     date = date.replace('-', '')
     yearMonth = date[:6]
     oldYearMonth = date[:4] + str(int(date[4:6]) - 1) if int(date[4:6]) != 1 else str(int(date[:4])-1) + '12'
@@ -106,30 +107,35 @@ def projectStatusMonthly():
     target = models.ProjectStatusInfo.objects.filter(date=oldYearMonth)
     for i in target:
         i = model_to_dict(i)
-        print(i)
+        # print(i)
         newDict = i.copy()
         newDict.pop('key')
         newDict['date'] = yearMonth
-        newDict['sow_num'] = '0'
-        newDict['project_num'] = '0'
-        newDict['new_project_num'] = '0'
-        newDict['offset_num'] = '0'
-        newDict['monthly_target'] = '0'
-        newDict['monthly_reach'] = '0'
         print(newDict)
-        models.ProjectStatusInfo.objects.create(**newDict)
+        # models.ProjectStatusInfo.objects.create(**newDict)
 
 
-def selectPicData1(region, pdu, recommender):
+def selectPicData1(region, pdu, recommender, date):
     # target = models.ApplicantInfo.objects.all()
+    date = date
     filterData = {}
+    filterData1 = {}
+    filterData2 = {}
+    filterData3 = {}
     if region:
         filterData['region'] = region
     if pdu:
         filterData['pdu'] = pdu
     if recommender:
         filterData['recommender'] = recommender
+    if date:
+        filterData1['recommend_time__range'] = date
+        filterData2['final_time__range'] = date
+        filterData3['giveup_time__range'] = date
     target = models.ApplicantInfo.objects.all().filter(**filterData)
+    target1 = models.ApplicantInfo.objects.all().filter(**filterData)
+    target2 = models.ApplicantInfo.objects.all().filter(**filterData)
+    target3 = models.ApplicantInfo.objects.all().filter(**filterData)
     List1 = []
     List2 = []
     List3 = []
@@ -139,33 +145,128 @@ def selectPicData1(region, pdu, recommender):
             # print(i.name)
             if i.resume_status == 'open':
                 if i.process_status == 'created':
-                    msg = '创建'
-                    List1.append(i.name)
+                    pass
                 else:
                     msg = '流程中'
                     List2.append(i.name)
             else:
                 msg = ''
                 if i.process_status == 'fellow':
+                    pass
+                else:
+                    pass
+            # print(f'状态-{msg}')
+        else:
+            print('数据错误')
+    for i in target1:
+        if i.process_status and i.resume_status:
+            msg = '创建'
+            List1.append(i.name)
+        else:
+            print('数据错误')
+    for i in target2:
+        if i.process_status and i.resume_status:
+            # print(i.name)
+            if i.resume_status == 'open':
+                if i.process_status == 'created':
+                    pass
+                else:
+                    pass
+            else:
+                msg = ''
+                if i.process_status == 'fellow':
                     msg = '已入职'
                     List3.append(i.name)
+                else:
+                    pass
+            # print(f'状态-{msg}')
+        else:
+            print('数据错误')
+    for i in target3:
+        if i.process_status and i.resume_status:
+            # print(i.name)
+            if i.resume_status == 'open':
+                if i.process_status == 'created':
+                    pass
+                else:
+                    pass
+            else:
+                msg = ''
+                if i.process_status == 'fellow':
+                    pass
                 else:
                     msg = '淘汰'
                     List4.append(i.name)
             # print(f'状态-{msg}')
         else:
             print('数据错误')
+    # a = {
+    #     '创建': List1,
+    #     '流程中': List2,
+    #     '已入职': List3,
+    #     '淘汰': List4,
+    # }
     a = {
-        '创建': List1,
-        '流程中': List2,
-        '已入职': List3,
-        '淘汰': List4,
+        '创建': len(List1),
+        '流程中': len(List2),
+        '已入职': len(List3),
+        '淘汰': len(List4),
     }
     # print('创建', List1)
     # print('流程中', List2)
     # print('已入职', List3)
     # print('淘汰', List4)
     return a
+
+
+
+def getPicData2(req):
+    nameList = []
+    x1 = []
+    x2 = []
+    x3 = []
+    x4 = []
+    chartType = req['chartType']
+    date = req['date']
+    if chartType == 'pdu':
+        department = req['department']
+        pduList = selectDepartment(department)
+        for i in pduList:
+            a = selectPicData1(None, i, None, None)
+            nameList.append(i)
+            x1.append(a['创建'])
+            x2.append(a['流程中'])
+            x3.append(a['已入职'])
+            x4.append(a['淘汰'])
+    elif chartType == 'recommender':
+        region = req['region']
+        regionList = models.ApplicantInfo.objects.values('recommender')
+        for i in regionList:
+            recommender = i['recommender']
+            a = selectPicData1(region, None, recommender, date)
+            nameList.append(region)
+            x1.append(a['创建'])
+            x2.append(a['流程中'])
+            x3.append(a['已入职'])
+            x4.append(a['淘汰'])
+    elif chartType == 'region':
+        regionList = models.ApplicantInfo.objects.values('region')
+        for i in regionList:
+            region = i['region']
+            a = selectPicData1(region, None, None, date)
+            nameList.append(region)
+            x1.append(a['创建'])
+            x2.append(a['流程中'])
+            x3.append(a['已入职'])
+            x4.append(a['淘汰'])
+    res = {
+        'xName': nameList,
+        'x1': x1,
+        'x2': x2,
+        'x3': x3,
+        'x4': x4,
+    }
+    return res
 
 
 def selectDepartment(department):
@@ -384,8 +485,78 @@ def get_final_pic_value(date):
     return res
 
 
+
+
+
+def getPicData2(req):
+    nameList = []
+    x1 = []
+    x2 = []
+    x3 = []
+    x4 = []
+    chartType = req['chartType']
+    date = req['date']
+    if chartType == 'pdu':
+        department = req['department']
+        pduList = selectDepartment(department)
+        for i in pduList:
+            a = selectPicData1(None, i, None, None)
+            nameList.append(i)
+            x1.append(a['创建'])
+            x2.append(a['流程中'])
+            x3.append(a['已入职'])
+            x4.append(a['淘汰'])
+    elif chartType == 'recommender':
+        region = req['region']
+        regionList = models.ApplicantInfo.objects.values('recommender')
+        for i in regionList:
+            recommender = i['recommender']
+            a = selectPicData1(region, None, recommender, date)
+            nameList.append(region)
+            x1.append(a['创建'])
+            x2.append(a['流程中'])
+            x3.append(a['已入职'])
+            x4.append(a['淘汰'])
+    elif chartType == 'region':
+        regionList = models.ApplicantInfo.objects.values('region')
+        for i in regionList:
+            region = i['region']
+            a = selectPicData1(region, None, None, date)
+            nameList.append(region)
+            x1.append(a['创建'])
+            x2.append(a['流程中'])
+            x3.append(a['已入职'])
+            x4.append(a['淘汰'])
+    res = {
+        'xName': nameList,
+        'x1': x1,
+        'x2': x2,
+        'x3': x3,
+        'x4': x4,
+    }
+    return res
+
 if __name__ == '__main__':
-    regionList = models.ProjectStatusInfo.objects.values('region').distinct()
-
-
+    req = {
+        'chartType': 'region',
+        'department': '海思半导体',
+        'date': [],
+        'region': '上海'
+    }
+    nameList = []
+    x1 = []
+    x2 = []
+    x3 = []
+    x4 = []
+    a = selectPicData1(None, '5033部', None, ['2020-03-02 00:00:00', '2022-05-31 23:59:59'])
+    nameList.append('5033部')
+    x1.append(a['创建'])
+    x2.append(a['流程中'])
+    x3.append(a['已入职'])
+    x4.append(a['淘汰'])
+    print(nameList)
+    print(x1)
+    print(x2)
+    print(x3)
+    print(x4)
 
