@@ -8,7 +8,7 @@ from hr_manage_db import models
 from django.forms.models import model_to_dict
 from openpyxl import Workbook, load_workbook
 import paramiko
-
+import json
 fileType = 'test'
 # workBook1 = xlsxwriter.Workbook(f'../downloadFile/{datetime.date.today()}-{fileType}.xlsx')
 
@@ -43,7 +43,17 @@ def getFileList(excelType):
     return fileList
 
 
-def newDownloadExcel(excelType):
+def newDownloadExcel(excelType, **kwargs):
+    if excelType == 'ApplicantInfo':
+        fileName = 'applicant_info'
+    if excelType == 'ProjectInfo':
+        fileName = 'project_info'
+    if excelType == 'ProjectStatusInfo':
+        fileName = 'project_status_info'
+    if excelType == 'RecruitmentInfo':
+        fileName = 'recruitment_info'
+    m = readJson(fileName)
+    print(m)
     if excelType == 'ApplicantInfo':
         dbTarget = models.ApplicantInfo
         target = models.ApplicantInfo
@@ -62,27 +72,56 @@ def newDownloadExcel(excelType):
         excelTypeName = '招聘需求'
     try:
         dbTarget = dbTarget._meta.get_fields()
-        wbk = xlwt.Workbook()
+        # wbk = xlwt.Workbook()
         now = str(datetime.datetime.now()).split(".")[0]
         filename = f'{now}-{excelTypeName}.xlsx'
         wb = Workbook()
-        ws = wb.create_sheet('Sheet1')
-        sheet = wbk.add_sheet('Sheet1', cell_overwrite_ok=True)
+        ws = wb['Sheet']
+        # sheet = wbk.add_sheet('Sheet1', cell_overwrite_ok=True)
         keyList = []
         for i in range(len(dbTarget)):
             query = dbTarget[i]
             name = query.name
             print(query.name)
             keyList.append(name)
-            sheet.write(0, i, name)
-            ws.cell(1, i+1).value = name
+            # sheet.write(0, i, name)
+            # ws.cell(1, i+1).value = name
+        i= 0
+        for item in m:
+            ws.cell(1, i+1).value = m[item]
+            i+=1
         target = target.objects.all()
+        try:
+            if kwargs['region'] and kwargs['region']!='all':
+                print('############') # 过滤可选数据
+                regionList = kwargs['region'].split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region=i))
+                print(regionList)
+                print(targetList)
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
+        except:
+            print('没传地域')
+        try:
+            if kwargs['selectDate']:
+                date = kwargs['selectDate']
+                print(date)
+                target = target.filter(date=date)
+        except:
+            print('没传日期')
         for i in range(len(target)):
             targetI = model_to_dict(target[i])
             for j in range(len(keyList)):
                 value = keyList[j]
                 value = targetI[value]
-                sheet.write(i + 1, j, str(value))
+                # print(str(value))
+                # sheet.write(i + 1, j, str(value))
                 ws.cell(i + 2, j+1).value = str(value)
         # wbk.save(f'FgBlog/dist/static/downloadFile/{filename}')
         wb.save(f'FgBlog/dist/static/downloadFile/{filename}')
@@ -97,7 +136,7 @@ def newDownloadExcel(excelType):
             wb_src = load_workbook(f'FgBlog/dist/static/downloadFile/{filename}')
             print(333)
             ws_demo = wb_demo['月度汇总页']
-            ws_src = wb_src['Sheet1']
+            ws_src = wb_src['Sheet']
             print('插入当月数据')
             for i in range(ws_src.max_row):
                 for j in range(13):
@@ -108,9 +147,19 @@ def newDownloadExcel(excelType):
             ws_demo['b1'].value = ws_src['b2'].value
             # 保存为新的文件
             print('保存为新的文件')
-            wb_demo.save(f'FgBlog/dist/static/downloadFile/after-{filename}')
+            filename = f'after-{filename}'
+            wb_demo.save(f'FgBlog/dist/static/downloadFile/{filename}')
             print('###############\n###############')
         return {'path': 'static/downloadFile/' + filename, 'name': filename}
     except Exception as e:
         print(str(e))
         print('error', excelType)
+
+
+def readJson(type):
+    print(type)
+    obj = json.load(open(f'/tmp/hr_manage/FgBlog/tableJson/{type}.json', 'r', encoding='utf-8'))
+    # for i in obj:
+    #     print(i)
+    #     print(obj[i])
+    return obj

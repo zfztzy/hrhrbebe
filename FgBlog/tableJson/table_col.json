@@ -1,0 +1,36 @@
+{
+  "RECORDS": [
+    {
+      "key": "0",
+      "table_type": "project_info",
+      "col": "key,department,pdu,business,name,region,delivery_leader,pm,qa,hr,hwpm,omper,pm2,type",
+      "name": "id,部门,PDU,业务块,项目名称,地域,软通交付主管,软通PM,软通QA,软通HR,华为PM,OMPer,PM候选,状态",
+      "width": "20,50,80,60,100,30,30,30,30,30,50,30,30,30",
+      "justtest": null
+    },
+    {
+      "key": "1",
+      "table_type": "pdu_info",
+      "col": "key,department,pdu,hwpdu_leader,region,pdu_manager,pdu_qa,pdu_hr,comment",
+      "name": "id,部门,PDU,HW业务主管,地域,PDU交付主管,PDU_QA,PDU_HR,备注",
+      "width": "20,50,80,50,50,40,40,40,50",
+      "justtest": null
+    },
+    {
+      "key": "4",
+      "table_type": "po_info",
+      "col": "key,project_po,po_name,pm,star_time,end_time,duration,onsite,operating_model,price_intax,department,pdu,region,delivery_leader,qa,hwpm,omper,score,OMP_endtime,inkpi,status,project_id",
+      "name": "id,合同编号,项目名称,软通PM,立项时间,结项时间,工期,离场,运作模式,不含税金额,BU,PDU,PO地域,交付主管,软通QA,华为PM,OMP挂名,验收得分,结项时间,KPI,状态,关联项目ID",
+      "width": "20,50,140,40,40,40,30,30,40,40,40,80,30,40,40,40,40,40,40,40,30,30",
+      "justtest": null
+    },
+    {
+      "key": "5",
+      "table_type": "po_list",
+      "col": "key,project_po,po_name,star_time,end_time,onsite,operating_model,price_intax,department,pdu,region,hwpm,score,omp_endtime,amount_extax",
+      "name": "id,合同编号,项目名称,立项时间,结项时间,离场,运作模式,PO金额,BU,PDU,PO地域,华为PM,得分,结项时间,实际不含税金额",
+      "width": "20,50,160,50,50,30,50,50,50,80,30,50,30,40,40",
+      "justtest": null
+    }
+  ]
+}

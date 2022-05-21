@@ -36,7 +36,7 @@ urlpatterns = [
     re_path(r'^projectManager.*', TemplateView.as_view(template_name='index.html')),
     re_path(r'^businessManager.*', TemplateView.as_view(template_name='index.html')),
     re_path(r'^Login.*', TemplateView.as_view(template_name='index.html')),
-    # re_path(r'^login.*', TemplateView.as_view(template_name='index.html')),
+    re_path(r'^home.*', TemplateView.as_view(template_name='index.html')),
     # path('admin/', admin.site.urls),
     path('get_applicant_info/', views.get_applicant_info),
     path('get_pdu_list/', views.get_pdu_list),

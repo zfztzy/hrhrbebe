@@ -10,45 +10,48 @@ from django.db import models
 
 class ApplicantInfo(models.Model):
     key = models.AutoField(primary_key=True)
+    recommend_time = models.DateTimeField(blank=True, null=True)
+    recommender = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     phone_num = models.CharField(max_length=255, blank=True, null=True)
-    graduated_from = models.CharField(max_length=255, blank=True, null=True)
+    sex = models.CharField(max_length=255, blank=True, null=True)
     education = models.CharField(max_length=255, blank=True, null=True)
+    graduated_from = models.CharField(max_length=255, blank=True, null=True)
     major = models.CharField(max_length=255, blank=True, null=True)
+    graduation = models.DateTimeField(blank=True, null=True)
     working_seniority = models.CharField(max_length=255, blank=True, null=True)
     job = models.CharField(max_length=255, blank=True, null=True)
+    onjob = models.CharField(max_length=100, blank=True, null=True)
+    interviews = models.CharField(max_length=100, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True)
+    reason1 = models.CharField(max_length=255, blank=True, null=True)
+    pdu = models.CharField(max_length=255, blank=True, null=True)
+    own_interview_results = models.CharField(max_length=255, blank=True, null=True)
+    suggest_level = models.CharField(max_length=255, blank=True, null=True)
+    hw_interview_results1 = models.CharField(max_length=255, blank=True, null=True)
+    hw_interview_results2 = models.CharField(max_length=255, blank=True, null=True)
+    reason2 = models.CharField(max_length=255, blank=True, null=True)
+    process_status = models.CharField(max_length=255, blank=True, null=True)
+    arrival_time = models.DateTimeField(blank=True, null=True)
+    offersuggest = models.CharField(max_length=100, blank=True, null=True)
+    reason4 = models.CharField(max_length=255, blank=True, null=True)
+    entrance = models.DateTimeField(blank=True, null=True)
     related = models.CharField(max_length=255, blank=True, null=True)
     project_name = models.CharField(max_length=255, blank=True, null=True)
-    pdu = models.CharField(max_length=255, blank=True, null=True)
-    arrival_time = models.DateTimeField(blank=True, null=True)
-    recommender = models.CharField(max_length=255, blank=True, null=True)
-    recommend_time = models.DateTimeField(blank=True, null=True)
     own_interviewer = models.CharField(max_length=255, blank=True, null=True)
-    own_interview_results = models.CharField(max_length=255, blank=True, null=True)
-    reason1 = models.CharField(max_length=255, blank=True, null=True)
     own_interview_time = models.DateTimeField(blank=True, null=True)
     machine_test_type = models.CharField(max_length=255, blank=True, null=True)
     machine_test_score = models.CharField(max_length=255, blank=True, null=True)
     machine_test_time = models.DateTimeField(blank=True, null=True)
     hw_interviewer1 = models.CharField(max_length=255, blank=True, null=True)
-    hw_interview_results1 = models.CharField(max_length=255, blank=True, null=True)
-    reason2 = models.CharField(max_length=255, blank=True, null=True)
     hw_interview_time1 = models.DateTimeField(blank=True, null=True)
     hw_interviewer2 = models.CharField(max_length=255, blank=True, null=True)
-    hw_interview_results2 = models.CharField(max_length=255, blank=True, null=True)
-    reason3 = models.CharField(max_length=255, blank=True, null=True)
     hw_interview_time2 = models.DateTimeField(blank=True, null=True)
     final_result = models.CharField(max_length=255, blank=True, null=True)
     final_time = models.DateTimeField(blank=True, null=True)
-    reason4 = models.CharField(max_length=255, blank=True, null=True)
-    process_status = models.CharField(max_length=255, blank=True, null=True)
-    resume_status = models.CharField(max_length=255, blank=True, null=True)
-    sex = models.CharField(max_length=255, blank=True, null=True)
-    suggest_level = models.CharField(max_length=255, blank=True, null=True)
-    entrance = models.DateTimeField(blank=True, null=True)
-    graduation = models.DateTimeField(blank=True, null=True)
     giveup_time = models.DateTimeField(blank=True, null=True)
+    reason3 = models.CharField(max_length=255, blank=True, null=True)
+    resume_status = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -159,31 +162,32 @@ class ProjectStatusInfo(models.Model):
 
 class RecruitmentInfo(models.Model):
     key = models.AutoField(primary_key=True)
-    internal_id = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     pdu = models.CharField(db_column='PDU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     project = models.CharField(max_length=255, blank=True, null=True)
-    type2 = models.CharField(max_length=255, blank=True, null=True)
+    proposer = models.CharField(max_length=255, blank=True, null=True)
     position_attribute = models.CharField(max_length=255, blank=True, null=True)
     skill_keyword = models.CharField(max_length=255, blank=True, null=True)
+    region = models.CharField(max_length=255, blank=True, null=True)
+    type2 = models.CharField(max_length=255, blank=True, null=True)
+    urgency = models.CharField(db_column='Urgency', max_length=255, blank=True, null=True)  # Field name made lowercase.
     requirements = models.TextField(blank=True, null=True)
     working_seniority = models.CharField(max_length=255, blank=True, null=True)
     proposed_time = models.DateTimeField(blank=True, null=True)
-    proposer = models.CharField(max_length=255, blank=True, null=True)
     arrival_time = models.DateTimeField(blank=True, null=True)
     num = models.CharField(max_length=255, blank=True, null=True)
     recruiter = models.CharField(max_length=255, blank=True, null=True)
     project_leader = models.CharField(max_length=255, blank=True, null=True)
-    region = models.CharField(max_length=255, blank=True, null=True)
-    location = models.CharField(db_column='Location', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    urgency = models.CharField(db_column='Urgency', max_length=255, blank=True, null=True)  # Field name made lowercase.
     type = models.CharField(max_length=255, blank=True, null=True)
+    location = models.CharField(db_column='Location', max_length=255, blank=True, null=True)  # Field name made lowercase.
     interviewer = models.CharField(max_length=255, blank=True, null=True)
     synthetical_interviewer = models.CharField(max_length=255, blank=True, null=True)
     arrival_num = models.CharField(max_length=255, blank=True, null=True)
-    status = models.CharField(max_length=255, blank=True, null=True)
+    omptype = models.CharField(db_column='OMPType', max_length=255, blank=True, null=True)  # Field name made lowercase.
     close_time = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=255, blank=True, null=True)
     remarks = models.CharField(max_length=255, blank=True, null=True)
+    internal_id = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -196,6 +200,7 @@ class TableCol(models.Model):
     col = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     width = models.CharField(max_length=100, blank=True, null=True)
+    justtest = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -232,6 +237,7 @@ class UserLevel(models.Model):
     projectmanager = models.IntegerField(blank=True, null=True)
     projectinfo = models.IntegerField(blank=True, null=True)
     poinfo = models.IntegerField(blank=True, null=True)
+    polist = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

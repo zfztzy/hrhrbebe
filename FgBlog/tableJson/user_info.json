@@ -1,0 +1,156 @@
+{
+  "RECORDS": [
+    {
+      "id": 1,
+      "user_name": "admin",
+      "password": "admin",
+      "nickname": "管理员",
+      "region": "all",
+      "level": "1"
+    },
+    {
+      "id": 2,
+      "user_name": "subAdmin",
+      "password": "subAdmin",
+      "nickname": "副管理员",
+      "region": "all",
+      "level": "2"
+    },
+    {
+      "id": 3,
+      "user_name": "hr",
+      "password": "hr",
+      "nickname": "项目助理",
+      "region": "深圳",
+      "level": "6"
+    },
+    {
+      "id": 4,
+      "user_name": "hr2",
+      "password": "hr2",
+      "nickname": "项目助理",
+      "region": "成都",
+      "level": "6"
+    },
+    {
+      "id": 5,
+      "user_name": "hr3",
+      "password": "hr3",
+      "nickname": "五傻逼",
+      "region": "上海",
+      "level": "6"
+    },
+    {
+      "id": 6,
+      "user_name": "bugHr",
+      "password": "bugHr",
+      "nickname": "傻逼",
+      "region": "all",
+      "level": "6"
+    },
+    {
+      "id": 7,
+      "user_name": "yyouf",
+      "password": "yyouf",
+      "nickname": "欧阳燕",
+      "region": "深圳|东莞",
+      "level": "4"
+    },
+    {
+      "id": 8,
+      "user_name": "dwzhang",
+      "password": "dwzhang",
+      "nickname": "张丹文",
+      "region": "深圳|东莞",
+      "level": "4"
+    },
+    {
+      "id": 9,
+      "user_name": "junlua",
+      "password": "junlua",
+      "nickname": "陆骏",
+      "region": "all",
+      "level": "3"
+    },
+    {
+      "id": 10,
+      "user_name": "shtest",
+      "password": "shtest",
+      "nickname": "上海招聘",
+      "region": "上海",
+      "level": "4"
+    },
+    {
+      "id": 11,
+      "user_name": "cdtest",
+      "password": "cdtest",
+      "nickname": "成都招聘",
+      "region": "成都",
+      "level": "4"
+    },
+    {
+      "id": 12,
+      "user_name": "xatest",
+      "password": "xatest",
+      "nickname": "西安招聘",
+      "region": "西安",
+      "level": "4"
+    },
+    {
+      "id": 13,
+      "user_name": "sztest",
+      "password": "sztest",
+      "nickname": "深圳招聘",
+      "region": "深圳",
+      "level": "4"
+    },
+    {
+      "id": 14,
+      "user_name": "rfye",
+      "password": "rfye",
+      "nickname": "叶瑞芳",
+      "region": "深圳|东莞|上海",
+      "level": "1"
+    },
+    {
+      "id": 15,
+      "user_name": "xxhuang",
+      "password": "xxhuang",
+      "nickname": "黄晓霞",
+      "region": "all",
+      "level": "5"
+    },
+    {
+      "id": 16,
+      "user_name": "liepin",
+      "password": "liepin",
+      "nickname": "猎聘",
+      "region": "深圳",
+      "level": "8"
+    },
+    {
+      "id": 17,
+      "user_name": "xlhanc",
+      "password": "xlhanc",
+      "nickname": "韩晓丽",
+      "region": "all",
+      "level": "2"
+    },
+    {
+      "id": 18,
+      "user_name": "llchu",
+      "password": "llchu",
+      "nickname": "楚靓靓",
+      "region": "all",
+      "level": "1"
+    },
+    {
+      "id": 19,
+      "user_name": "test",
+      "password": "test",
+      "nickname": "test",
+      "region": "深圳",
+      "level": "1"
+    }
+  ]
+}

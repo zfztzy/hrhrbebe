@@ -536,27 +536,8 @@ def getPicData2(req):
     }
     return res
 
-if __name__ == '__main__':
-    req = {
-        'chartType': 'region',
-        'department': '海思半导体',
-        'date': [],
-        'region': '上海'
-    }
-    nameList = []
-    x1 = []
-    x2 = []
-    x3 = []
-    x4 = []
-    a = selectPicData1(None, '5033部', None, ['2020-03-02 00:00:00', '2022-05-31 23:59:59'])
-    nameList.append('5033部')
-    x1.append(a['创建'])
-    x2.append(a['流程中'])
-    x3.append(a['已入职'])
-    x4.append(a['淘汰'])
-    print(nameList)
-    print(x1)
-    print(x2)
-    print(x3)
-    print(x4)
 
+if __name__ == '__main__':
+    a = {'name': '陈嘉仪', 'process_status': 'fellow', 'resume_status': 'close', 'phone_num': 15363355173, 'graduated_from': '韩山师范学院???', 'education': '本科', 'major': '统计学', 'working_seniority': 0.5, 'job': 'python', 'region': '深圳', 'sex': '女', 'suggest_level': '4A', 'entrance': '2017-09-17 00:00:00', 'graduation': '2021-06-29 00:00:00', 'related': None, 'pdu': '5026部', 'project_name': 'TM-5026测试软通深圳2022H1', 'arrival_time': '2022-03-29 00:00:00', 'recommender': '杜可改', 'recommend_time': '2022-03-16 00:00:00', 'own_interviewer': '谢少林', 'own_interview_results': '通过', 'own_interview_time': '2022-03-18 00:00:00', 'machine_test_type': 'python', 'machine_test_score': 60, 'machine_test_time': '2022-03-22 15:00:00', 'hw_interviewer1': None, 'hw_interview_results1': None, 'hw_interview_time1': None, 'hw_interviewer2': None, 'hw_interview_results2': None, 'hw_interview_time2': None, 'final_result': None, 'final_time': '2022-03-12 00:00:00', 'giveup_time': '2022-04-12 00:00:00', 'reason4': None, 'reason1': None, 'reason2': None, 'reason3': None}
+
+    models.ApplicantInfo.objects.create(**a)

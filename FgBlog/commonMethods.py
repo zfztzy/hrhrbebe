@@ -122,7 +122,7 @@ def get_status_object(date):
 
 def get_final_pic_value(date):
     if not date:
-        return { 'msg': '没选择日期'}
+        return {'msg': '没选择日期'}
     pduList = selectDepartment('海思半导体', date)
     pduValueList = get_status_object(date)
     xData1 = []
@@ -337,6 +337,7 @@ def selectPicData1(region, pdu, recommender, date):
 
 
 
+
 def getPicData2(req):
     nameList = []
     x1 = []
@@ -385,3 +386,5 @@ def getPicData2(req):
         'x4': x4,
     }
     return res
+
+

@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import json
 from django.forms.models import model_to_dict
 from FgBlog.batchOutput.batchOutput import getFileList
-from FgBlog.batchOutput.batchOutput import newDownloadExcel
+from FgBlog.batchOutput.batchOutput import newDownloadExcel, readJson
 import time
 from pyquery import PyQuery as pq
 from hr_manage_db import models
@@ -29,15 +29,6 @@ def project_status_monthly(request):
         return JsonResponse({'msg': 'startTask'}, safe=False)
 
 
-def studyInfo2(request):
-    if request.method == 'POST':
-        index = request.GET.get('data')
-        print(type(index))
-        print(index)
-        # rsp = a.getStudyInfo(index)
-        return JsonResponse(index, safe=False)
-
-
 def get_applicant_info(request):
     if request.method == 'POST':
         req = json.loads(request.body.decode('utf-8'))
@@ -53,13 +44,35 @@ def get_applicant_info(request):
             target = models.ApplicantInfo.objects.filter(**filterData).order_by('-key')
             if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                 print(f'region:{filterRegion}')
-                target = target.filter(region=filterRegion)
+                regionList = filterRegion.split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region__icontains=i))
+                print(regionList)
+                print(targetList)
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
         else:
             print(1)
             target = models.ApplicantInfo.objects.all().order_by('-key')
             if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                 print(f'region:{filterRegion}')
-                target = target.filter(region=filterRegion)
+                regionList = filterRegion.split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region__icontains=i))
+                print(regionList)
+                print(targetList)
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
         applicantList = []
         for index in range(len(target)):
             i = target[index]
@@ -78,22 +91,24 @@ def applicant_according_to_recruitment(request):
     info = {}
     totalTarget = models.ApplicantInfo.objects.all().filter(related=recruitmentId)
     total = len(totalTarget)
-    fail = len(totalTarget.filter(process_status__icontains='fail')) if totalTarget.filter(
-        process_status__icontains='fail') else 0
-    done = len(totalTarget.filter(process_status__icontains='fellow')) if totalTarget.filter(
-        process_status__icontains='fellow') else 0
-    giveUp = len(totalTarget.filter(process_status__icontains='giveUp')) if totalTarget.filter(
-        process_status__icontains='giveUp') else 0
-    discuss = len(totalTarget.filter(process_status__icontains='discuss')) if totalTarget.filter(
-        process_status__icontains='discuss') else 0
-    standBy = len(totalTarget.filter(process_status__icontains='standBy')) if totalTarget.filter(
-        process_status__icontains='standBy') else 0
-    created = len(totalTarget.filter(process_status__icontains='created')) if totalTarget.filter(
-        process_status__icontains='created') else 0
-    filtering = len(totalTarget.filter(process_status__icontains='pass')) if totalTarget.filter(
-        process_status__icontains='pass') else 0
+    fail = len(totalTarget.filter(process_status__icontains='不通过')) if totalTarget.filter(
+        process_status__icontains='不通过') else 0
+    done = len(totalTarget.filter(process_status__icontains='已入职')) if totalTarget.filter(
+        process_status__icontains='已入职') else 0
+    giveUp = len(totalTarget.filter(process_status__icontains='放弃offer')) if totalTarget.filter(
+        process_status__icontains='放弃offer') else 0
+    discuss = len(totalTarget.filter(process_status__icontains='谈offer中')) if totalTarget.filter(
+        process_status__icontains='谈offer中') else 0
+    standBy = len(totalTarget.filter(process_status__icontains='待入职')) if totalTarget.filter(
+        process_status__icontains='待入职') else 0
+    created = len(totalTarget.filter(process_status__icontains='创建')) if totalTarget.filter(
+        process_status__icontains='创建') else 0
+    filtering = len(totalTarget.filter(process_status__icontains='通过')) if totalTarget.filter(
+        process_status__icontains='通过') else 0
     info['total'] = total
     info['done'] = done
+    info['discuss'] = discuss
+    info['standBy'] = standBy
     info['filtering'] = filtering + created + standBy + discuss
     info['fail'] = fail
     info['giveUp'] = giveUp
@@ -118,13 +133,35 @@ def get_recruitment_info(request):
                 target = models.RecruitmentInfo.objects.filter(**filterData).order_by('-key')
                 if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                     print(f'region:{filterRegion}')
-                    target = target.filter(region=filterRegion)
+                    regionList = filterRegion.split('|')
+                    targetList = []
+                    for i in regionList:
+                        targetList.append(target.filter(region__icontains=i))
+                    print(regionList)
+                    print(targetList)
+                    target = ''
+                    for i in targetList:
+                        if target == '':
+                            target = i
+                        else:
+                            target = target | i
             else:
                 print(1)
                 target = models.RecruitmentInfo.objects.all().order_by('-key')
                 if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                     print(f'region:{filterRegion}')
-                    target = target.filter(region=filterRegion)
+                    regionList = filterRegion.split('|')
+                    targetList = []
+                    for i in regionList:
+                        targetList.append(target.filter(region__icontains=i))
+                    print(regionList)
+                    print(targetList)
+                    target = ''
+                    for i in targetList:
+                        if target == '':
+                            target = i
+                        else:
+                            target = target | i
             infoList = []
             for index in range(len(target)):
                 i = target[index]
@@ -153,8 +190,10 @@ def new_download_excel(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         fileType = data.get('batchType')
+        selectDate = data.get('selectDate')
+        filterRegion = data.get('filterRegion')
         print(fileType)
-        fileInfo = newDownloadExcel(fileType)
+        fileInfo = newDownloadExcel(fileType, region__icontains=filterRegion, selectDate=selectDate)
         data = {'fileInfo': fileInfo}
         return JsonResponse(data, safe=False)
 
@@ -179,13 +218,24 @@ def get_project_status_info(request):
         selectDate = req.get('selectDate')
         filterRegion = req.get('filterRegion')
         if selectDate:
-            print(selectDate)
             target = models.ProjectStatusInfo.objects.all().filter(date=selectDate).order_by('-key')
         else:
-            target = models.ProjectStatusInfo.objects.all().order_by('-key')
+            selectDate = str(datetime.date.today()).replace('-', '')[:6]
+            target = models.ProjectStatusInfo.objects.all().filter(date=selectDate).order_by('-key')
         if filterRegion and filterRegion != 'null' and filterRegion != 'all':
             print(f'region:{filterRegion}')
-            target = target.filter(region=filterRegion)
+            regionList = filterRegion.split('|')
+            targetList = []
+            for i in regionList:
+                targetList.append(target.filter(region__icontains=i))
+            print(regionList)
+            print(targetList)
+            target = ''
+            for i in targetList:
+                if target == '':
+                    target = i
+                else:
+                    target = target | i
         infoList = []
         date = str(datetime.date.today())
         print(date)
@@ -229,15 +279,17 @@ def get_project_status_info(request):
                 'monthly_target': i.monthly_target,
                 'urgency': i.urgency,
                 'monthly_reach': i.monthly_reach,
-                'monthly_target_reach': int(i.monthly_reach) / int(i.monthly_target) if i.monthly_target != '' and int(
+                'monthly_target_reach': str((int(i.monthly_reach) / int(i.monthly_target)) * 100)[:5] + '%' if i.monthly_target != '' and int(
                     i.monthly_target) != 0 else 0,
                 'remarks': i.remarks,
                 'project_num_all': offset_num + new_project_num,
-                'project_satisfaction': project_num / int(i.sow_num) if int(i.sow_num) != 0 else 0,
+                'project_satisfaction': str((project_num / int(i.sow_num)) * 100)[:5] + '%' if int(i.sow_num) != 0 else 0,
                 'canEdit': canEdit
             }
             infoList.append(info)
         data = {'infoList': infoList}
+        if selectDate == str(datetime.date.today()).replace('-', '')[:6] and int(str(datetime.date.today()).replace('-', '')[6:8]) > 4:
+            data['remove'] = True
         return JsonResponse(data, safe=False)
 
 
@@ -257,13 +309,35 @@ def get_project_info(request):
             target = models.ProjectInfo.objects.filter(**filterData)
             if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                 print(f'region:{filterRegion}')
-                target = target.filter(region=filterRegion)
+                regionList = filterRegion.split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region__icontains=i))
+                print(regionList)
+                print(targetList)
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
         else:
             print(1)
             target = models.ProjectInfo.objects.all()
             if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                 print(f'region:{filterRegion}')
-                target = target.filter(region=filterRegion)
+                regionList = filterRegion.split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region__icontains=i))
+                print(regionList)
+                print(targetList)
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
         infoList = []
         for index in range(len(target)):
             i = target[index]
@@ -437,32 +511,55 @@ def login(request):
 
 
 def batchInputExcel(path, excelType):
+    if excelType == 'ApplicantInfo':
+        fileName = 'applicant_info'
+    if excelType == 'ProjectInfo':
+        fileName = 'project_info'
+    if excelType == 'ProjectStatusInfo':
+        fileName = 'project_status_info'
+    if excelType == 'RecruitmentInfo':
+        fileName = 'recruitment_info'
+    # data = pd.read_excel(path)
+    # print(type(data))
+    # print("len(data):", len(data))
+    # n = []
+    # m = readJson(fileName)
     data = pd.read_excel(path)
     print(type(data))
     print("len(data):", len(data))
     n = []
-    for i in data.columns:
+    # nn = []
+    m = readJson(fileName)
+    # for i in range(len(m)):
+    #     print(data.columns[i])
+    #     print(type(data.columns[i]))
+    #     nn.append(data.columns[i])
+    for i in m:
         n.append(i)
-    for i in range(len(data)):
+    for i in range(len(data)): # 行
         a = data.loc[i]
         target = {}
-        for r in range(2, len(n)):
-            print(n[r])
-            print(a[r])
+        for r in range(1, len(n)): # 列
+            # print(n[r])
+            # print(a[r])
             if a[r] is not None and a[r] != 'None' and a[r] != 'nan':
                 target[n[r]] = a[r]
-            print(target)
-        print("#########")
-        print(excelType)
-        if excelType == 'ApplicantInfo':
-            res = models.ApplicantInfo.objects.create(**target)
-            print(res)
-        if excelType == 'ProjectInfo':
-            models.ProjectInfo.objects.create(**target)
-        if excelType == 'ProjectStatusInfo':
-            models.ProjectStatusInfo.objects.create(**target)
-        if excelType == 'RecruitmentInfo':
-            models.RecruitmentInfo.objects.create(**target)
+        for r in target:
+            print(r)
+            print(target[r])
+            print(type(target[r]))
+        print(target)
+        try:
+            if excelType == 'ApplicantInfo':
+                models.ApplicantInfo.objects.create(**target)
+            if excelType == 'ProjectInfo':
+                models.ProjectInfo.objects.create(**target)
+            if excelType == 'ProjectStatusInfo':
+                models.ProjectStatusInfo.objects.create(**target)
+            if excelType == 'RecruitmentInfo':
+                models.RecruitmentInfo.objects.create(**target)
+        except:
+            print(f'第{i}条数据没进')
 
 
 def save_excel(request):
