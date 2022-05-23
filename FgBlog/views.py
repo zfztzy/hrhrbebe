@@ -583,11 +583,16 @@ def update_recruitment_info(request):
         data = data.get('data')
         print(type(data))
         print(data)
-        data.pop('total')
-        data.pop('fail')
-        data.pop('filtering')
-        data.pop('giveUp')
-        data.pop('done')
+        try:
+            data.pop('total')
+            data.pop('fail')
+            data.pop('discuss')
+            data.pop('filtering')
+            data.pop('giveUp')
+            data.pop('done')
+            data.pop('standBy')
+        except:
+            print('还没加载项目人数')
         for k in list(data.keys()):
             if not data[k] and data[k] != 0:
                 del data[k]
