@@ -32,9 +32,11 @@ class ApplicantInfo(models.Model):
     hw_interview_results2 = models.CharField(max_length=255, blank=True, null=True)
     reason2 = models.CharField(max_length=255, blank=True, null=True)
     process_status = models.CharField(max_length=255, blank=True, null=True)
-    arrival_time = models.DateTimeField(blank=True, null=True)
+    arrival_time = models.CharField(max_length=255, blank=True, null=True)
     offersuggest = models.CharField(max_length=100, blank=True, null=True)
     reason4 = models.CharField(max_length=255, blank=True, null=True)
+    final_time = models.DateTimeField(blank=True, null=True)
+    giveup_time = models.DateTimeField(blank=True, null=True)
     entrance = models.DateTimeField(blank=True, null=True)
     related = models.CharField(max_length=255, blank=True, null=True)
     project_name = models.CharField(max_length=255, blank=True, null=True)
@@ -48,10 +50,8 @@ class ApplicantInfo(models.Model):
     hw_interviewer2 = models.CharField(max_length=255, blank=True, null=True)
     hw_interview_time2 = models.DateTimeField(blank=True, null=True)
     final_result = models.CharField(max_length=255, blank=True, null=True)
-    final_time = models.DateTimeField(blank=True, null=True)
-    giveup_time = models.DateTimeField(blank=True, null=True)
-    reason3 = models.CharField(max_length=255, blank=True, null=True)
     resume_status = models.CharField(max_length=255, blank=True, null=True)
+    reason3 = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

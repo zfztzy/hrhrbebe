@@ -180,8 +180,9 @@ def get_file_list(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         fileType = data.get('batchType')
+        userName = data.get('userName')
         print(fileType)
-        fileList = getFileList(fileType)
+        fileList = getFileList(fileType, userName)
         data = {'fileList': fileList}
         return JsonResponse(data, safe=False)
 
@@ -192,8 +193,9 @@ def new_download_excel(request):
         fileType = data.get('batchType')
         selectDate = data.get('selectDate')
         filterRegion = data.get('filterRegion')
+        userName = data.get('userName')
         print(fileType)
-        fileInfo = newDownloadExcel(fileType, region__icontains=filterRegion, selectDate=selectDate)
+        fileInfo = newDownloadExcel(fileType, userName=userName, region__icontains=filterRegion, selectDate=selectDate)
         data = {'fileInfo': fileInfo}
         return JsonResponse(data, safe=False)
 

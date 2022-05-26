@@ -15,7 +15,7 @@ fileType = 'test'
 
 
 
-def getFileList(excelType):
+def getFileList(excelType, userName):
     if excelType == 'ApplicantInfo':
         excelTypeName = '候选人管理'
     if excelType == 'ProjectInfo':
@@ -39,11 +39,12 @@ def getFileList(excelType):
         filename = fileAttr.filename
         print(fileAttr.longname)
         if excelType in filename or excelTypeName in filename:
-            fileList.append({'path': 'static/downloadFile/' + filename, 'name': filename})
+            if userName in filename:
+                fileList.append({'path': 'static/downloadFile/' + filename, 'name': filename})
     return fileList
 
 
-def newDownloadExcel(excelType, **kwargs):
+def newDownloadExcel(excelType, userName, **kwargs):
     if excelType == 'ApplicantInfo':
         fileName = 'applicant_info'
     if excelType == 'ProjectInfo':
@@ -74,7 +75,7 @@ def newDownloadExcel(excelType, **kwargs):
         dbTarget = dbTarget._meta.get_fields()
         # wbk = xlwt.Workbook()
         now = str(datetime.datetime.now()).split(".")[0]
-        filename = f'{now}-{excelTypeName}.xlsx'
+        filename = f'{now}-{excelTypeName}-{userName}.xlsx'
         wb = Workbook()
         ws = wb['Sheet']
         # sheet = wbk.add_sheet('Sheet1', cell_overwrite_ok=True)
