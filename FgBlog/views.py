@@ -195,7 +195,7 @@ def new_download_excel(request):
         filterRegion = data.get('filterRegion')
         userName = data.get('userName')
         print(fileType)
-        fileInfo = newDownloadExcel(fileType, userName=userName, region__icontains=filterRegion, selectDate=selectDate)
+        fileInfo = newDownloadExcel(fileType, userName=userName, region=filterRegion, selectDate=selectDate)
         data = {'fileInfo': fileInfo}
         return JsonResponse(data, safe=False)
 
@@ -292,6 +292,15 @@ def get_project_status_info(request):
         data = {'infoList': infoList}
         if selectDate == str(datetime.date.today()).replace('-', '')[:6] and int(str(datetime.date.today()).replace('-', '')[6:8]) > 4:
             data['remove'] = True
+        return JsonResponse(data, safe=False)
+
+
+def delete_project_status_info(request):
+    if request.method == 'POST':
+        req = json.loads(request.body.decode('utf-8'))
+        deleteKey = req.get('deleteKey')
+        msg = models.ProjectStatusInfo.objects.filter(key=deleteKey).delete()
+        data = {'msg': msg}
         return JsonResponse(data, safe=False)
 
 
@@ -686,7 +695,39 @@ def update_project_status(request):
         print(data)
         target = models.ProjectStatusInfo.objects.filter(key=key)
         target.update(**data)
-        res = {'infoList': '11111'}
+        target = model_to_dict(models.ProjectStatusInfo.objects.filter(key=key)[0])
+        date = str(datetime.date.today())
+        print(date)
+        # date = '2022-04-04'
+        date = date.replace('-', '')
+        yearMonth = date[:6]
+        if target['date'] == yearMonth or int(target['date']) > int(yearMonth):
+            canEdit = True
+        else:
+            canEdit = False
+        project_num = target['project_num']
+        if project_num == '':
+            project_num = 0
+        else:
+            project_num = int(project_num)
+        new_project_num = target['new_project_num']
+        if new_project_num == '':
+            new_project_num = 0
+        else:
+            new_project_num = int(new_project_num)
+        offset_num = target['offset_num']
+        if offset_num == '':
+            offset_num = 0
+        else:
+            offset_num = int(offset_num)
+        try:
+            target['monthly_target_reach'] = str((int(target['monthly_reach']) / int(target['monthly_target'])) * 100)[:5] + '%'
+        except:
+            target['monthly_target_reach'] = '0%'
+        target['project_num_all'] = offset_num + new_project_num,
+        target['project_satisfaction'] = str((project_num / int(target['sow_num'])) * 100)[:5] + '%' if int(target['sow_num']) != 0 else 0,
+        target['canEdit'] = canEdit
+        res = {'data': target}
         return JsonResponse(res, safe=False)
 
 

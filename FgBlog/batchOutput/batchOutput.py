@@ -98,15 +98,17 @@ def newDownloadExcel(excelType, userName, **kwargs):
                 regionList = kwargs['region'].split('|')
                 targetList = []
                 for i in regionList:
-                    targetList.append(target.filter(region=i))
+                    targetList.append(target.filter(region__icontains=i))
                 print(regionList)
                 print(targetList)
                 target = ''
                 for i in targetList:
+                    print(target)
                     if target == '':
                         target = i
                     else:
                         target = target | i
+                    print(target)
         except:
             print('没传地域')
         try:

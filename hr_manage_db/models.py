@@ -58,6 +58,37 @@ class ApplicantInfo(models.Model):
         db_table = 'applicant_info'
 
 
+class ContactInfo(models.Model):
+    key = models.AutoField(primary_key=True)
+    employee_num = models.ForeignKey('EmployeeInfo', models.DO_NOTHING, db_column='employee_num')
+    employeename = models.CharField(max_length=100, blank=True, null=True)
+    charger_name = models.CharField(max_length=100)
+    contact_date = models.DateField(blank=True, null=True)
+    contact_type = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'contact_info'
+
+
+class CustomerInfo(models.Model):
+    key = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    hw_num = models.CharField(max_length=100, blank=True, null=True)
+    hwdu = models.CharField(max_length=100, blank=True, null=True)
+    hwpdu = models.CharField(max_length=100, blank=True, null=True)
+    position = models.CharField(max_length=100, blank=True, null=True)
+    region = models.CharField(max_length=100, blank=True, null=True)
+    email = models.CharField(max_length=100, blank=True, null=True)
+    phonenum = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'customer_info'
+
+
 class DjangoMigrations(models.Model):
     app = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
@@ -66,6 +97,23 @@ class DjangoMigrations(models.Model):
     class Meta:
         managed = False
         db_table = 'django_migrations'
+
+
+class EmployeeInfo(models.Model):
+    key = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    rt_num = models.IntegerField(unique=True)
+    hw_num = models.CharField(max_length=100, blank=True, null=True)
+    wb_num = models.CharField(max_length=100, blank=True, null=True)
+    w3_num = models.CharField(max_length=100, blank=True, null=True)
+    rtemail = models.CharField(max_length=100, blank=True, null=True)
+    hwemail = models.CharField(max_length=100, blank=True, null=True)
+    phonenum = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'employee_info'
 
 
 class PduInfo(models.Model):
@@ -160,6 +208,23 @@ class ProjectStatusInfo(models.Model):
         db_table = 'project_status_info'
 
 
+class RaiseSalaryInfo(models.Model):
+    key = models.AutoField(primary_key=True)
+    rt_num = models.ForeignKey(EmployeeInfo, models.DO_NOTHING, db_column='rt_num')
+    tj_date = models.DateTimeField(blank=True, null=True)
+    before_level = models.CharField(max_length=100, blank=True, null=True)
+    after_level = models.CharField(max_length=100, blank=True, null=True)
+    tx_time = models.DateTimeField(blank=True, null=True)
+    before_salary = models.CharField(max_length=100, blank=True, null=True)
+    increase = models.IntegerField(blank=True, null=True)
+    type = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'raise_salary_info'
+
+
 class RecruitmentInfo(models.Model):
     key = models.AutoField(primary_key=True)
     department = models.CharField(max_length=255, blank=True, null=True)
@@ -217,6 +282,7 @@ class UserInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'user_info'
+        unique_together = (('user_name', 'nickname'),)
 
 
 class UserLevel(models.Model):
@@ -238,6 +304,10 @@ class UserLevel(models.Model):
     projectinfo = models.IntegerField(blank=True, null=True)
     poinfo = models.IntegerField(blank=True, null=True)
     polist = models.IntegerField(blank=True, null=True)
+    customerinfo = models.IntegerField(blank=True, null=True)
+    employee = models.IntegerField(blank=True, null=True)
+    salary = models.IntegerField(blank=True, null=True)
+    contact = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
