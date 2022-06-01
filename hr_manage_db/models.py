@@ -308,6 +308,7 @@ class UserLevel(models.Model):
     employee = models.IntegerField(blank=True, null=True)
     salary = models.IntegerField(blank=True, null=True)
     contact = models.IntegerField(blank=True, null=True)
+    apphome = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

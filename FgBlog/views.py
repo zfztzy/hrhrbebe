@@ -247,22 +247,22 @@ def get_project_status_info(request):
         for i in range(len(target)):
             ii = i
             i = target[i]
-            if i.date == yearMonth or int(i.date) > int(yearMonth):
+            if int(i.date) * 100 + 104 > int(date):
                 canEdit = True
             else:
                 canEdit = False
             project_num = i.project_num
-            if project_num == '':
+            if project_num == '' or not project_num:
                 project_num = 0
             else:
                 project_num = int(project_num)
             new_project_num = i.new_project_num
-            if new_project_num == '':
+            if new_project_num == '' or not new_project_num:
                 new_project_num = 0
             else:
                 new_project_num = int(new_project_num)
             offset_num = i.offset_num
-            if offset_num == '':
+            if offset_num == '' or not offset_num:
                 offset_num = 0
             else:
                 offset_num = int(offset_num)
@@ -281,11 +281,11 @@ def get_project_status_info(request):
                 'monthly_target': i.monthly_target,
                 'urgency': i.urgency,
                 'monthly_reach': i.monthly_reach,
-                'monthly_target_reach': str((int(i.monthly_reach) / int(i.monthly_target)) * 100)[:5] + '%' if i.monthly_target != '' and int(
+                'monthly_target_reach': str((int(i.monthly_reach) / int(i.monthly_target)) * 100)[:5] + '%' if i.monthly_target and i.monthly_target != '' and int(
                     i.monthly_target) != 0 else 0,
                 'remarks': i.remarks,
                 'project_num_all': offset_num + new_project_num,
-                'project_satisfaction': str((project_num / int(i.sow_num)) * 100)[:5] + '%' if int(i.sow_num) != 0 else 0,
+                'project_satisfaction': str((project_num / int(i.sow_num)) * 100)[:5] + '%' if i.sow_num and int(i.sow_num) != 0 else 0,
                 'canEdit': canEdit
             }
             infoList.append(info)
@@ -662,6 +662,21 @@ def get_status_pic_value(request):
         return JsonResponse(res, safe=False)
 
 
+def create_project_status(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        data = data.get('data')
+        print(type(data))
+        print(data)
+        try:
+            models.ProjectStatusInfo.objects.create(**data)
+            res = '新增成功'
+        except Exception as e:
+            res = e
+        res = {'data': res}
+        return JsonResponse(res, safe=False)
+
+
 def update_project_status(request):
     if request.method == 'POST':
         # data = json.loads(request.body.decode('utf-8'))
@@ -701,7 +716,7 @@ def update_project_status(request):
         # date = '2022-04-04'
         date = date.replace('-', '')
         yearMonth = date[:6]
-        if target['date'] == yearMonth or int(target['date']) > int(yearMonth):
+        if target['date'] + '04' == date or int(target['date'])*100 + 4 > int(date):
             canEdit = True
         else:
             canEdit = False

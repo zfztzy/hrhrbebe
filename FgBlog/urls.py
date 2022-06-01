@@ -47,6 +47,7 @@ urlpatterns = [
     path('get_project_info/', views.get_project_info),
     path('update_applicant_info/', views.update_applicant_info),
     path('delete_project_status_info/', views.delete_project_status_info),
+    path('create_project_status/', views.create_project_status),
     path('update_project_status/', views.update_project_status),
     path('update_recruitment_info/', views.update_recruitment_info),
     path('update_project_info/', views.update_project_info),
