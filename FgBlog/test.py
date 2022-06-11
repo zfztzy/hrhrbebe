@@ -537,7 +537,74 @@ def getPicData2(req):
     return res
 
 
-if __name__ == '__main__':
-    a = {'name': '陈嘉仪', 'process_status': 'fellow', 'resume_status': 'close', 'phone_num': 15363355173, 'graduated_from': '韩山师范学院???', 'education': '本科', 'major': '统计学', 'working_seniority': 0.5, 'job': 'python', 'region': '深圳', 'sex': '女', 'suggest_level': '4A', 'entrance': '2017-09-17 00:00:00', 'graduation': '2021-06-29 00:00:00', 'related': None, 'pdu': '5026部', 'project_name': 'TM-5026测试软通深圳2022H1', 'arrival_time': '2022-03-29 00:00:00', 'recommender': '杜可改', 'recommend_time': '2022-03-16 00:00:00', 'own_interviewer': '谢少林', 'own_interview_results': '通过', 'own_interview_time': '2022-03-18 00:00:00', 'machine_test_type': 'python', 'machine_test_score': 60, 'machine_test_time': '2022-03-22 15:00:00', 'hw_interviewer1': None, 'hw_interview_results1': None, 'hw_interview_time1': None, 'hw_interviewer2': None, 'hw_interview_results2': None, 'hw_interview_time2': None, 'final_result': None, 'final_time': '2022-03-12 00:00:00', 'giveup_time': '2022-04-12 00:00:00', 'reason4': None, 'reason1': None, 'reason2': None, 'reason3': None}
+def getRegionListTarget(region, regionTarget):
+    regionList = region.split('|')
+    targetList = []
+    for i in regionList:
+        targetList.append(regionTarget.filter(region__icontains=i))
+    target = ''
+    for i in targetList:
+        if target == '':
+            target = i
+        else:
+            target = target | i
+    return target
 
-    models.ApplicantInfo.objects.create(**a)
+
+def getPduRecruitmentPic(region, picType):
+    typeKeyList = []
+    if picType == 'pdu':
+        target = models.RecruitmentInfo.objects.values('pdu').distinct()
+        target = getRegionListTarget(region, target)
+        for i in target:
+            typeKeyList.append(i['pdu'])
+    if picType == 'job':
+        target = models.RecruitmentInfo.objects.values('position_attribute').distinct()
+        target = getRegionListTarget(region, target)
+        for i in target:
+            typeKeyList.append(i['position_attribute'])
+    # if picType == 'region':
+    #     target = models.RecruitmentInfo.objects.values('region').distinct()
+    #     target = getRegionListTarget(region, target)
+    #     for i in target:
+    #         typeKeyList.append(i['region'])
+    SumList = []
+    slaList = []
+    xData = []
+    for key in typeKeyList:
+        if picType == 'pdu':
+            target = models.RecruitmentInfo.objects.filter(pdu=key, status__icontains='进行中')
+            target = getRegionListTarget(region, target)
+        if picType == 'job':
+            target = models.RecruitmentInfo.objects.filter(position_attribute=key, status__icontains='进行中')
+            target = getRegionListTarget(region, target)
+        # if picType == 'region':
+        #     target = models.RecruitmentInfo.objects.filter(region=key, status__icontains='进行中')
+        #     target = getRegionListTarget(region, target)
+        pduSum = 0
+        sla = 0
+        for i in target:
+            print(i)
+            if i.type2 == 'SLA':
+                sla += (int(i.num) - int(i.arrival_num))
+            pduSum += (int(i.num) - int(i.arrival_num))
+        if pduSum == 0:
+            continue
+        xData.append(key)
+        slaList.append(sla)
+        SumList.append(pduSum)
+        # print(key)
+        # print(pduSum)
+        # print(sla)
+    return {
+        'xData': xData,
+        'slaList': slaList,
+        'SumList': SumList
+    }
+
+
+if __name__ == '__main__':
+    res = getPduRecruitmentPic('深圳|东莞', 'pdu')
+    print(res)
+    res = getPduRecruitmentPic('深圳|东莞', 'job')
+    print(res)

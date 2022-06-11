@@ -17,6 +17,7 @@ from FgBlog.commonMethods import projectStatusMonthly
 from FgBlog.commonMethods import selectDepartment
 from FgBlog.commonMethods import get_final_pic_value
 from FgBlog.commonMethods import getPicData2
+from django import forms
 
 
 def realHome(request):
@@ -31,58 +32,58 @@ def project_status_monthly(request):
 
 def get_applicant_info(request):
     if request.method == 'POST':
-        req = json.loads(request.body.decode('utf-8'))
-        print(type(req))
-        print(req)
-        filterData = req.get('filterData')
-        filterRegion = req.get('filterRegion')
-        if filterData:
-            print(filterData)
-            for i in list(filterData.keys()):
-                if filterData[i] == '':
-                    filterData.pop(i)
-            target = models.ApplicantInfo.objects.filter(**filterData).order_by('-key')
-            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+        try:
+            req = json.loads(request.body.decode('utf-8'))
+            print(type(req))
+            print(req)
+            filterData = req.get('filterData')
+            filterRegion = req.get('filterRegion')
+            filterNickname = req.get('filterNickname')
+            # 角色判断
+            role = models.UserInfo.objects.filter(nickname__icontains=filterNickname).first()
+            if not role:
+                return JsonResponse({"status": False, 'error': "登录异常。"})
+
+            # 筛选器
+            if filterData:
+                print(filterData)
+                for i in list(filterData.keys()):
+                    if filterData[i] == '':
+                        filterData.pop(i)
+                target = models.ApplicantInfo.objects.filter(**filterData).order_by('-key')
+            else:
+                target = models.ApplicantInfo.objects.all().order_by('-key')
+            # 角色筛选
+            # 如果当前角色为招聘,只筛选推荐人为当前登录人的候选人信息
+            if role.level == "4":
+                target = target.filter(recommender__icontains=filterNickname)
+            # 地域筛选
+            elif filterRegion and filterRegion != 'null' and filterRegion != 'all':
                 print(f'region:{filterRegion}')
                 regionList = filterRegion.split('|')
                 targetList = []
                 for i in regionList:
                     targetList.append(target.filter(region__icontains=i))
-                print(regionList)
-                print(targetList)
                 target = ''
                 for i in targetList:
                     if target == '':
                         target = i
                     else:
                         target = target | i
-        else:
-            print(1)
-            target = models.ApplicantInfo.objects.all().order_by('-key')
-            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
-                print(f'region:{filterRegion}')
-                regionList = filterRegion.split('|')
-                targetList = []
-                for i in regionList:
-                    targetList.append(target.filter(region__icontains=i))
-                print(regionList)
-                print(targetList)
-                target = ''
-                for i in targetList:
-                    if target == '':
-                        target = i
-                    else:
-                        target = target | i
-        applicantList = []
-        for index in range(len(target)):
-            i = target[index]
-            applicant = model_to_dict(i)
-            for k in applicant.keys():
-                if applicant[k] is None:
-                    applicant[k] = ''
-            applicantList.append(applicant)
-        data = {'applicantList': applicantList}
-        return JsonResponse(data, safe=False)
+
+            # 整理返回数据
+            applicantList = []
+            for index in range(len(target)):
+                i = target[index]
+                applicant = model_to_dict(i)
+                for k in applicant.keys():
+                    if applicant[k] is None:
+                        applicant[k] = ''
+                applicantList.append(applicant)
+            data = {'applicantList': applicantList}
+            return JsonResponse(data, safe=False)
+        except Exception as e:
+            return JsonResponse({"status": False, 'error': str(e)})
 
 
 def applicant_according_to_recruitment(request):
@@ -130,7 +131,7 @@ def get_recruitment_info(request):
                     if filterData[i] == '':
                         filterData.pop(i)
                 print(filterData)
-                target = models.RecruitmentInfo.objects.filter(**filterData).order_by('-key')
+                target = models.RecruitmentInfo.objects.exclude(status='关闭').filter(**filterData).order_by('-key')
                 if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                     print(f'region:{filterRegion}')
                     regionList = filterRegion.split('|')
@@ -147,7 +148,7 @@ def get_recruitment_info(request):
                             target = target | i
             else:
                 print(1)
-                target = models.RecruitmentInfo.objects.all().order_by('-key')
+                target = models.RecruitmentInfo.objects.all().exclude(status='关闭').order_by('-key')
                 if filterRegion and filterRegion != 'null' and filterRegion != 'all':
                     print(f'region:{filterRegion}')
                     regionList = filterRegion.split('|')
@@ -281,16 +282,19 @@ def get_project_status_info(request):
                 'monthly_target': i.monthly_target,
                 'urgency': i.urgency,
                 'monthly_reach': i.monthly_reach,
-                'monthly_target_reach': str((int(i.monthly_reach) / int(i.monthly_target)) * 100)[:5] + '%' if i.monthly_target and i.monthly_target != '' and int(
+                'monthly_target_reach': str((int(i.monthly_reach) / int(i.monthly_target)) * 100)[
+                                        :5] + '%' if i.monthly_target and i.monthly_target != '' and int(
                     i.monthly_target) != 0 else 0,
                 'remarks': i.remarks,
                 'project_num_all': offset_num + new_project_num,
-                'project_satisfaction': str((project_num / int(i.sow_num)) * 100)[:5] + '%' if i.sow_num and int(i.sow_num) != 0 else 0,
+                'project_satisfaction': str((project_num / int(i.sow_num)) * 100)[:5] + '%' if i.sow_num and int(
+                    i.sow_num) != 0 else 0,
                 'canEdit': canEdit
             }
             infoList.append(info)
         data = {'infoList': infoList}
-        if selectDate == str(datetime.date.today()).replace('-', '')[:6] and int(str(datetime.date.today()).replace('-', '')[6:8]) > 4:
+        if selectDate == str(datetime.date.today()).replace('-', '')[:6] and int(
+                str(datetime.date.today()).replace('-', '')[6:8]) > 4:
             data['remove'] = True
         return JsonResponse(data, safe=False)
 
@@ -428,7 +432,6 @@ def get_columns(request):
             columns = [
             ]
             for index in range(len(dataIndexList)):
-
                 i = {
                     'title': nameList[index],
                     'dataIndex': dataIndexList[index],
@@ -437,12 +440,12 @@ def get_columns(request):
                 }
                 columns.append(i)
             a = {
-                    'title': 'operation',
-                    'dataIndex': 'operation',
-                    'fixed': 'right',
-                    'scopedSlots': {'customRender': 'operation'},
-                    'width': 130,
-                }
+                'title': 'operation',
+                'dataIndex': 'operation',
+                'fixed': 'right',
+                'scopedSlots': {'customRender': 'operation'},
+                'width': 130,
+            }
             columns.append(a)
             print(columns)
         except:
@@ -463,6 +466,87 @@ def create_applicant_info(request):
         return JsonResponse(res)
 
 
+def create_contact_info(request):
+    print("这是新增")
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        data = data.get('data')
+        print(type(data))
+        print(data)
+
+        # 检验员工工号 employee_num employee_num
+        employee = models.EmployeeInfo.objects.get(rt_num=int(data["employee_num"]))
+        if not employee:
+            result = {
+                "status": False,
+                "msg": "工号不存在，请核实。"
+            }
+            return JsonResponse(result)
+        # 对工号与员工姓名的验证
+        if employee.name != data["employeename"]:
+            result = {
+                "status": False,
+                "msg": "工号与姓名不匹配，请核实。"
+            }
+            return JsonResponse(result)
+        # 时间format
+        contact_date = data["contact_date"]
+        try:
+            contact_date = datetime.datetime.strptime(contact_date, '%Y%m%d')
+            # contact_date = datetime.datetime.strptime(contact_date, '%Y-%m-%d')
+            print(contact_date)
+        except:
+            result = {
+                "status": False,
+                "msg": "沟通日期填写错误，请按照2022-05-02格式填写。"
+            }
+            return JsonResponse(result, safe=False)
+        # 新增
+        obj = models.ContactInfo(employee_num=employee.rt_num, employeename=employee.name,
+                                 charger_name=data["charger_name"],
+                                 contact_date=contact_date, type=data["type"], remarks=data["remarks"],
+                                 contact_type=data["contact_type"], region=employee.region, leader=employee.pdumanager,
+                                 pm=employee.pm)
+        obj.save()
+        result = {
+            "status": True,
+            "msg": "添加成功。"
+        }
+        return JsonResponse(result, safe=False)
+
+
+def update_common_infoDB(data, modelsobject):
+    try:
+        for k in list(data.keys()):
+            if not data[k] and data[k] != 0:
+                del data[k]
+        key = data['key']
+        print(key)
+
+        target = modelsobject.filter(key=key)
+        target.update(**data)
+        result = {
+            "status": True,
+            "msg": "更新成功"
+        }
+
+    except Exception as e:
+        result = {
+            "status": False,
+            "msg": e
+        }
+    return JsonResponse(result)
+
+
+def update_contact_info(request):
+    print("这是修改")
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        data = data.get('data')
+
+        return update_common_infoDB(data, models.ContactInfo.objects)
+
+
 def get_pdu_list(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
@@ -481,6 +565,7 @@ def create_recruitment_info(request):
         print(type(data))
         data['proposed_time'] = datetime.datetime.now()
         print(data)
+        data.pop('key')
         target = models.RecruitmentInfo.objects
         target.create(**data)
         res = {'msg': '新增成功'}
@@ -547,10 +632,10 @@ def batchInputExcel(path, excelType):
     #     nn.append(data.columns[i])
     for i in m:
         n.append(i)
-    for i in range(len(data)): # 行
+    for i in range(len(data)):  # 行
         a = data.loc[i]
         target = {}
-        for r in range(1, len(n)): # 列
+        for r in range(1, len(n)):  # 列
             # print(n[r])
             # print(a[r])
             if a[r] is not None and a[r] != 'None' and a[r] != 'nan':
@@ -637,13 +722,21 @@ def update_project_info(request):
         if key != 0:
             target = models.ProjectInfo.objects.filter(key=key)
             target.update(**data)
-            res = {'infoList': '11111'}
-            return JsonResponse(res, safe=False)
+            result = {
+                "status": True,
+                "msg": "更新成功。"
+            }
+            return JsonResponse(result, safe=False)
+            # return JsonResponse(res, safe=False)
         else:
             target = models.ProjectInfo.objects
             target.update_or_create(**data)
-            res = {'infoList': '11111'}
-            return JsonResponse(res, safe=False)
+            result = {
+                "status": True,
+                "msg": "添加成功。"
+            }
+            return JsonResponse(result, safe=False)
+            # return JsonResponse(res, safe=False)
 
 
 def get_status_pic_value(request):
@@ -716,7 +809,7 @@ def update_project_status(request):
         # date = '2022-04-04'
         date = date.replace('-', '')
         yearMonth = date[:6]
-        if target['date'] + '04' == date or int(target['date'])*100 + 4 > int(date):
+        if target['date'] + '04' == date or int(target['date']) * 100 + 4 > int(date):
             canEdit = True
         else:
             canEdit = False
@@ -736,11 +829,13 @@ def update_project_status(request):
         else:
             offset_num = int(offset_num)
         try:
-            target['monthly_target_reach'] = str((int(target['monthly_reach']) / int(target['monthly_target'])) * 100)[:5] + '%'
+            target['monthly_target_reach'] = str((int(target['monthly_reach']) / int(target['monthly_target'])) * 100)[
+                                             :5] + '%'
         except:
             target['monthly_target_reach'] = '0%'
         target['project_num_all'] = offset_num + new_project_num,
-        target['project_satisfaction'] = str((project_num / int(target['sow_num'])) * 100)[:5] + '%' if int(target['sow_num']) != 0 else 0,
+        target['project_satisfaction'] = str((project_num / int(target['sow_num'])) * 100)[:5] + '%' if int(
+            target['sow_num']) != 0 else 0,
         target['canEdit'] = canEdit
         res = {'data': target}
         return JsonResponse(res, safe=False)
@@ -771,6 +866,7 @@ def get_common_data(request):
         data = json.loads(request.body.decode('utf-8'))
         tableType = data.get('tableType')
         res = JsonResponse({'msg': 'error'}, safe=False)
+        poList = []
         print(type(tableType))
         print(tableType)
         if tableType == 'project_info':
@@ -779,9 +875,224 @@ def get_common_data(request):
             res = get_pdu_info(request)
         if tableType == 'po_info' or tableType == 'po_list':
             res = get_po_info(request)
+        if tableType == 'contact':
+            # res = get_common_fromDB(request, models.ContactInfo)
+            res = get_contact_info(request)
+            # target = models.ContactInfo.objects.all()
+            # tar = models.EmployeeInfo.objects.get(rt_num=18403)
+            # obj = models.ContactInfo(employee_num=tar, charger_name="halou")
+            # obj.save()
+        # contact.employee_num = 18403
+        #
+        #
+        #
+        #  target = models.ContactInfo.objects.all().first()
+        #  targets = target.objects.select_related("employee_num__employee_info")
+        #  poList = []
+        #  for i in targets:
+        #      poList.append(model_to_dict(i))
+        #  res = {'tableData': poList}
+        #  return JsonResponse("res", safe=False)
+        # res = get_common_fromDB(request,models.ContactInfo)
+        if tableType == 'employee' or tableType == 'employeenum':
+            res = get_common_fromDB(request, models.EmployeeInfo)
         return res
-# Anaconda
-# export PATH=$PATH:/home/fg/anaconda3/bin
 
+
+def create_common_info(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        tableType = data.get('tableType')
+        # res = JsonResponse({'msg': 'error'}, safe=False)
+        data = data.get('data')
+        print(type(data))
+        print(data)
+        if tableType == 'contact':
+            res = create_contact_info(request)
+            # target = models.ContactInfo.objects
+            # target.create(**data)
+            # res = JsonResponse(res)
+        return res
+
+
+class ContactModelForm(forms.ModelForm):
+    class Meta:
+        model = models.ContactInfo
+        fields = "__all__"
+        # fields = [""]
+
+
+# def update_contact_info(request):
+#     if request.method == 'POST':
+#        data = json.loads(request.body.decode('utf-8'))
+#        data = data.get('data')
+#     for k in list(data.keys()):
+#         if not data[k] and data[k] != 0:
+#             del data[k]
+#     key = data['key']
+#     print(key)
+#     data.pop('key')
+#     print(data)
+#     if key != 0:
+#         row_object = models.ContactInfo.objects.filter(key=key)
+#         if not row_object.first:
+#             result = {
+#                 "status": False,
+#                 "msg": "数据不存在，请刷新重试。"
+#             }
+#             return JsonResponse(result)
+#         # 对工号的验证
+#         employeenum = models.ContactInfo.objects.filter(key=key).first().employee_num
+#         employee = models.EmployeeInfo.objects.filter(rt_num=employeenum).first()
+#         if not employee:
+#             result = {
+#                 "status": False,
+#                 "msg": "工号错误，请重新填写。"
+#             }
+#             return JsonResponse(result)
+#             # return JsonResponse({'msg': "工号错误，请重新填写。"})
+#         # datetime没有强制转化。
+#         row_object.update(**data)
+#         result = {
+#             "status": True,
+#             "msg": "更新成功。"
+#         }
+#         # res = {'msg': 'update success'}
+#         # return JsonResponse(result, safe=False)
+#     else:
+#         target = models.ContactInfo.objects
+#         target.update_or_create(**data)
+#         result = {
+#             "status": True,
+#             "msg": "更新成功。"
+#         }
+#         # res = {'msg': 'update success'}
+#     return JsonResponse(result, safe=False)
+
+
+def update_common_info(request):
+    print("这是修改")
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        tableType = data.get('tableType')
+        res = JsonResponse({'msg': 'error'}, safe=False)
+        data = data.get('data')
+        print(type(data))
+        print(data)
+        if tableType == 'contact':
+            res = update_contact_info(request)
+        if tableType == 'project_info':
+            res = update_project_info(request)
+        return res
+
+
+def get_contact_info(request):
+    if request.method == 'POST':
+        try:
+            req = json.loads(request.body.decode('utf-8'))
+            filterData = req.get('filterData')
+            filterRegion = req.get('filterRegion')
+            filterNickname = req.get('filterNickname')
+
+            # 判断登录人员
+            role = models.UserInfo.objects.get(nickname=filterNickname)
+            if not role:
+                return JsonResponse({"status": False, 'error': "登录异常。"})
+
+            # 筛选器
+            if filterData:
+                print(filterData)
+                for i in list(filterData.keys()):
+                    if filterData[i] == '':
+                        filterData.pop(i)
+                target = models.ContactInfo.objects.filter(**filterData).order_by('-key')
+            else:
+                target = models.ContactInfo.objects.all().order_by('-key')
+
+            # 角色筛选。 如果当前角色为交付主管,只筛选其下员工的沟通信息
+            if role.level == "3":
+                target = target.filter(leader__icontains=filterNickname)
+            # 地域筛选
+            elif filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                print(f'region:{filterRegion}')
+                regionList = filterRegion.split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region__icontains=i))
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
+
+            # 整理返回数据
+            applicantList = []
+            for index in range(len(target)):
+                i = target[index]
+                applicant = model_to_dict(i)
+                for k in applicant.keys():
+                    if applicant[k] is None:
+                        applicant[k] = ''
+                applicantList.append(applicant)
+            data = {'tableData': applicantList}
+            return JsonResponse(data, safe=False)
+        except Exception as e:
+            result = {
+                "status": False,
+                "msg": str(e)
+            }
+            return JsonResponse(result)
+
+
+def get_common_fromDB(request, modelsobject):
+    if request.method == 'POST':
+        try:
+            req = json.loads(request.body.decode('utf-8'))
+            print(type(req))
+            print(req)
+            filterData = req.get('filterData')
+            filterRegion = req.get('filterRegion')
+            if filterData:
+                print(filterData)
+                for i in list(filterData.keys()):
+                    if filterData[i] == '':
+                        filterData.pop(i)
+                print(filterData)
+                target = modelsobject.objects.filter(**filterData).order_by('-key')
+            else:
+                print(1)
+                target = modelsobject.objects.all().order_by('-key')
+            if filterRegion and filterRegion != 'null' and filterRegion != 'all':
+                print(f'region:{filterRegion}')
+                regionList = filterRegion.split('|')
+                targetList = []
+                for i in regionList:
+                    targetList.append(target.filter(region__icontains=i))
+                print(regionList)
+                print(targetList)
+                target = ''
+                for i in targetList:
+                    if target == '':
+                        target = i
+                    else:
+                        target = target | i
+            infoList = []
+            for index in range(len(target)):
+                i = target[index]
+                info = model_to_dict(i)
+                for k in info.keys():
+                    if info[k] is None:
+                        info[k] = ''
+                infoList.append(info)
+            data = {'tableData': infoList}
+            print("========================================")
+            print(infoList)
+            return JsonResponse(data, safe=False)
+        except Exception as e:
+            print(str(e))
+            return JsonResponse(str(e), safe=False)
+# Anaconda
+# export PATH=$PATH:/home/fg/anaconda3/bi
 
 # uwsgi –http :8000 chdir /home/fg/fgBlog/fgBlog –module django_wsgi

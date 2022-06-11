@@ -60,7 +60,7 @@ class ApplicantInfo(models.Model):
 
 class ContactInfo(models.Model):
     key = models.AutoField(primary_key=True)
-    employee_num = models.ForeignKey('EmployeeInfo', models.DO_NOTHING, db_column='employee_num')
+    employee_num = models.IntegerField(unique=True)
     employeename = models.CharField(max_length=100, blank=True, null=True)
     charger_name = models.CharField(max_length=100)
     contact_date = models.DateField(blank=True, null=True)
@@ -108,6 +108,22 @@ class EmployeeInfo(models.Model):
     w3_num = models.CharField(max_length=100, blank=True, null=True)
     rtemail = models.CharField(max_length=100, blank=True, null=True)
     hwemail = models.CharField(max_length=100, blank=True, null=True)
+    prolevel = models.CharField(max_length=100, blank=True, null=True)
+    sex = models.CharField(max_length=100, blank=True, null=True)
+    entrydate = models.CharField(max_length=100, blank=True, null=True)
+    checkindate = models.CharField(max_length=100, blank=True, null=True)
+    facedate = models.CharField(max_length=100, blank=True, null=True)
+    ompendingtime = models.CharField(db_column='OMPendingtime', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    endworktime = models.CharField(max_length=100, blank=True, null=True)
+    levelprojecttime = models.CharField(max_length=100, blank=True, null=True)
+    offworktime = models.CharField(max_length=100, blank=True, null=True)
+    projectim = models.CharField(db_column='projectIM', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    projectname = models.CharField(max_length=100, blank=True, null=True)
+    projecttype = models.CharField(max_length=100, blank=True, null=True)
+    hwmanager = models.CharField(max_length=100, blank=True, null=True)
+    office = models.CharField(max_length=100, blank=True, null=True)
+    pdumanager = models.CharField(max_length=100, blank=True, null=True)
+    pm = models.CharField(max_length=100, blank=True, null=True)
     phonenum = models.CharField(max_length=100, blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
 
@@ -309,6 +325,7 @@ class UserLevel(models.Model):
     salary = models.IntegerField(blank=True, null=True)
     contact = models.IntegerField(blank=True, null=True)
     apphome = models.IntegerField(blank=True, null=True)
+    employeenum = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

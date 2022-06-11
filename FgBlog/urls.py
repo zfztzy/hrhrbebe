@@ -61,6 +61,9 @@ urlpatterns = [
     path('applicant_according_to_recruitment/', views.applicant_according_to_recruitment),
     path('get_columns/', views.get_columns),
     path('get_common_data/', views.get_common_data),
+    path('create_common_info/', views.create_common_info),
+    path('get_contact_info/', views.get_contact_info),
+    path('update_common_info/', views.update_common_info),
     path('get_status_pic_value/', views.get_status_pic_value),
     path('login/', views.login),
 
