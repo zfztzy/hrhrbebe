@@ -65,6 +65,7 @@ urlpatterns = [
     path('get_contact_info/', views.get_contact_info),
     path('update_common_info/', views.update_common_info),
     path('get_status_pic_value/', views.get_status_pic_value),
+    path('get_recruitmentInfo_pic/', views.get_recruitmentInfo_pic),
     path('login/', views.login),
 
 ]

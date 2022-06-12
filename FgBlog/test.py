@@ -584,7 +584,6 @@ def getPduRecruitmentPic(region, picType):
         pduSum = 0
         sla = 0
         for i in target:
-            print(i)
             if i.type2 == 'SLA':
                 sla += (int(i.num) - int(i.arrival_num))
             pduSum += (int(i.num) - int(i.arrival_num))

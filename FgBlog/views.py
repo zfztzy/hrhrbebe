@@ -1092,6 +1092,91 @@ def get_common_fromDB(request, modelsobject):
         except Exception as e:
             print(str(e))
             return JsonResponse(str(e), safe=False)
+
+
+def getRegionListTarget(region, regionTarget):
+    if region == 'all':
+        return regionTarget
+    regionList = region.split('|')
+    targetList = []
+    for i in regionList:
+        targetList.append(regionTarget.filter(region__icontains=i))
+    target = ''
+    for i in targetList:
+        if target == '':
+            target = i
+        else:
+            target = target | i
+    return target
+
+
+def getPduRecruitmentPic(region, picType):
+    typeKeyList = []
+    if picType == 'pdu':
+        target = models.RecruitmentInfo.objects.values('pdu').distinct()
+        target = getRegionListTarget(region, target)
+        for i in target:
+            typeKeyList.append(i['pdu'])
+    if picType == 'job':
+        target = models.RecruitmentInfo.objects.values('position_attribute').distinct()
+        target = getRegionListTarget(region, target)
+        for i in target:
+            typeKeyList.append(i['position_attribute'])
+    # if picType == 'region':
+    #     target = models.RecruitmentInfo.objects.values('region').distinct()
+    #     target = getRegionListTarget(region, target)
+    #     for i in target:
+    #         typeKeyList.append(i['region'])
+    SumList = []
+    slaList = []
+    xData = []
+    for key in typeKeyList:
+        if picType == 'pdu':
+            target = models.RecruitmentInfo.objects.filter(pdu=key, status__icontains='进行中')
+            target = getRegionListTarget(region, target)
+        if picType == 'job':
+            target = models.RecruitmentInfo.objects.filter(position_attribute=key, status__icontains='进行中')
+            target = getRegionListTarget(region, target)
+        # if picType == 'region':
+        #     target = models.RecruitmentInfo.objects.filter(region=key, status__icontains='进行中')
+        #     target = getRegionListTarget(region, target)
+        pduSum = 0
+        sla = 0
+        for i in target:
+            print(i)
+            if i.type2 == 'SLA':
+                sla += (int(i.num) - int(i.arrival_num))
+            pduSum += (int(i.num) - int(i.arrival_num))
+        if pduSum == 0:
+            continue
+        xData.append(key)
+        slaList.append(sla)
+        SumList.append(pduSum)
+        # print(key)
+        # print(pduSum)
+        # print(sla)
+    return {
+        'xData': xData,
+        'slaList': slaList,
+        'SumList': SumList
+    }
+
+
+def get_recruitmentInfo_pic(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        region = data.get('filterRegion')
+        picType = data.get('picType')
+        picData = getPduRecruitmentPic(region, picType)
+        res = {'picData': picData}
+        return JsonResponse(res, safe=False)
+
+
+
+
+
+
+
 # Anaconda
 # export PATH=$PATH:/home/fg/anaconda3/bi
 

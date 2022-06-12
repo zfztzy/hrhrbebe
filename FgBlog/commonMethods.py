@@ -97,6 +97,7 @@ def get_status_object(date):
     pduTotal = {}
     pduReach = {}
     pduTarget = {}
+    print(pduList)
     for pdu in pduList:
         pdu = pdu['pdu']
         for i in target:
