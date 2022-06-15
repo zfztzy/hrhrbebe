@@ -551,33 +551,18 @@ def getRegionListTarget(region, regionTarget):
     return target
 
 
-def getPduRecruitmentPic(region, picType):
+def getPduRecruitmentSum(region, department):
     typeKeyList = []
-    if picType == 'pdu':
-        target = models.RecruitmentInfo.objects.values('pdu').distinct()
-        target = getRegionListTarget(region, target)
-        for i in target:
-            typeKeyList.append(i['pdu'])
-    if picType == 'job':
-        target = models.RecruitmentInfo.objects.values('position_attribute').distinct()
-        target = getRegionListTarget(region, target)
-        for i in target:
-            typeKeyList.append(i['position_attribute'])
-    # if picType == 'region':
-    #     target = models.RecruitmentInfo.objects.values('region').distinct()
-    #     target = getRegionListTarget(region, target)
-    #     for i in target:
-    #         typeKeyList.append(i['region'])
+    target = models.RecruitmentInfo.objects.values('pdu').distinct()
+    target = getRegionListTarget(region, target)
+    for i in target:
+        typeKeyList.append(i['pdu'])
     SumList = []
     slaList = []
     xData = []
     for key in typeKeyList:
-        if picType == 'pdu':
-            target = models.RecruitmentInfo.objects.filter(pdu=key, status__icontains='进行中')
-            target = getRegionListTarget(region, target)
-        if picType == 'job':
-            target = models.RecruitmentInfo.objects.filter(position_attribute=key, status__icontains='进行中')
-            target = getRegionListTarget(region, target)
+        target = models.RecruitmentInfo.objects.filter(pdu=key, status__icontains='进行中', department=department)
+        target = getRegionListTarget(region, target)
         # if picType == 'region':
         #     target = models.RecruitmentInfo.objects.filter(region=key, status__icontains='进行中')
         #     target = getRegionListTarget(region, target)
@@ -596,14 +581,11 @@ def getPduRecruitmentPic(region, picType):
         # print(pduSum)
         # print(sla)
     return {
-        'xData': xData,
-        'slaList': slaList,
-        'SumList': SumList
+        'slaList': sum(slaList),
+        'SumList': sum(SumList)
     }
 
 
 if __name__ == '__main__':
-    res = getPduRecruitmentPic('深圳|东莞', 'pdu')
-    print(res)
-    res = getPduRecruitmentPic('深圳|东莞', 'job')
+    res = getPduRecruitmentPic('深圳|东莞')
     print(res)

@@ -1130,6 +1130,16 @@ def getPduRecruitmentPic(region, picType):
     SumList = []
     slaList = []
     xData = []
+    Sub1Sum = 0
+    Sub2Sum = 0
+    Sub1Sla = 0
+    Sub2Sla = 0
+    hsbdt = getPduRecruitmentPduSum(region, '海思半导体')
+    Sub1Sum = hsbdt['SumList']
+    Sub1Sla = hsbdt['slaList']
+    shhs = getPduRecruitmentPduSum(region, '上海海思')
+    Sub2Sum = shhs['SumList']
+    Sub2Sla = shhs['slaList']
     for key in typeKeyList:
         if picType == 'pdu':
             target = models.RecruitmentInfo.objects.filter(pdu=key, status__icontains='进行中')
@@ -1143,7 +1153,46 @@ def getPduRecruitmentPic(region, picType):
         pduSum = 0
         sla = 0
         for i in target:
-            print(i)
+            if i.type2 == 'SLA':
+                sla += (int(i.num) - int(i.arrival_num))
+            pduSum += (int(i.num) - int(i.arrival_num))
+        if pduSum == 0:
+            continue
+        # print(key)
+        # print(pduSum)
+        # print(sla)
+        xData.append(key)
+        slaList.append(sla)
+        SumList.append(pduSum)
+    return {
+        'xData': xData,
+        'slaList': slaList,
+        'SumList': SumList,
+        'Sub1Sum': Sub1Sum,
+        'Sub2Sum': Sub2Sum,
+        'Sub1Sla': Sub1Sla,
+        'Sub2Sla': Sub2Sla
+    }
+
+
+def getPduRecruitmentPduSum(region, department):
+    typeKeyList = []
+    target = models.RecruitmentInfo.objects.values('pdu').distinct()
+    target = getRegionListTarget(region, target)
+    for i in target:
+        typeKeyList.append(i['pdu'])
+    SumList = []
+    slaList = []
+    xData = []
+    for key in typeKeyList:
+        target = models.RecruitmentInfo.objects.filter(pdu=key, status__icontains='进行中', department=department)
+        target = getRegionListTarget(region, target)
+        # if picType == 'region':
+        #     target = models.RecruitmentInfo.objects.filter(region=key, status__icontains='进行中')
+        #     target = getRegionListTarget(region, target)
+        pduSum = 0
+        sla = 0
+        for i in target:
             if i.type2 == 'SLA':
                 sla += (int(i.num) - int(i.arrival_num))
             pduSum += (int(i.num) - int(i.arrival_num))
@@ -1156,9 +1205,8 @@ def getPduRecruitmentPic(region, picType):
         # print(pduSum)
         # print(sla)
     return {
-        'xData': xData,
-        'slaList': slaList,
-        'SumList': SumList
+        'slaList': sum(slaList),
+        'SumList': sum(SumList)
     }
 
 
@@ -1169,6 +1217,16 @@ def get_recruitmentInfo_pic(request):
         picType = data.get('picType')
         picData = getPduRecruitmentPic(region, picType)
         res = {'picData': picData}
+        return JsonResponse(res, safe=False)
+
+
+def get_recruitmentInfo_pdu_sum(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        region = data.get('filterRegion')
+        department = data.get('department')
+        sumData = getPduRecruitmentPduSum(region, department)
+        res = {'sumData': sumData}
         return JsonResponse(res, safe=False)
 
 
