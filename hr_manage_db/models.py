@@ -18,7 +18,7 @@ class ApplicantInfo(models.Model):
     education = models.CharField(max_length=255, blank=True, null=True)
     graduated_from = models.CharField(max_length=255, blank=True, null=True)
     major = models.CharField(max_length=255, blank=True, null=True)
-    graduation = models.DateTimeField(blank=True, null=True)
+    graduation = models.CharField(max_length=255, blank=True, null=True)
     working_seniority = models.CharField(max_length=255, blank=True, null=True)
     job = models.CharField(max_length=255, blank=True, null=True)
     onjob = models.CharField(max_length=100, blank=True, null=True)
@@ -37,7 +37,7 @@ class ApplicantInfo(models.Model):
     reason4 = models.CharField(max_length=255, blank=True, null=True)
     final_time = models.DateTimeField(blank=True, null=True)
     giveup_time = models.DateTimeField(blank=True, null=True)
-    entrance = models.DateTimeField(blank=True, null=True)
+    entrance = models.CharField(max_length=255, blank=True, null=True)
     related = models.CharField(max_length=255, blank=True, null=True)
     project_name = models.CharField(max_length=255, blank=True, null=True)
     own_interviewer = models.CharField(max_length=255, blank=True, null=True)
@@ -60,12 +60,16 @@ class ApplicantInfo(models.Model):
 
 class ContactInfo(models.Model):
     key = models.AutoField(primary_key=True)
-    employee_num = models.IntegerField(unique=True)
+    employee_num = models.IntegerField()
     employeename = models.CharField(max_length=100, blank=True, null=True)
     charger_name = models.CharField(max_length=100)
     contact_date = models.DateField(blank=True, null=True)
-    contact_type = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=100, blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
+    contact_type = models.CharField(max_length=100, blank=True, null=True)
+    region = models.CharField(max_length=100, blank=True, null=True)
+    leader = models.CharField(max_length=100, blank=True, null=True)
+    pm = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -125,6 +129,7 @@ class EmployeeInfo(models.Model):
     pdumanager = models.CharField(max_length=100, blank=True, null=True)
     pm = models.CharField(max_length=100, blank=True, null=True)
     phonenum = models.CharField(max_length=100, blank=True, null=True)
+    region = models.CharField(max_length=100, blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
 
     class Meta:

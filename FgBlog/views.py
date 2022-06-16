@@ -651,6 +651,8 @@ def batchInputExcel(path, excelType):
             if excelType == 'ProjectInfo':
                 models.ProjectInfo.objects.create(**target)
             if excelType == 'ProjectStatusInfo':
+                if not target['arrival_num']:
+                    target['arrival_num'] = 0
                 models.ProjectStatusInfo.objects.create(**target)
             if excelType == 'RecruitmentInfo':
                 models.RecruitmentInfo.objects.create(**target)
