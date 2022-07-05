@@ -427,6 +427,8 @@ def get_columns(request):
         print(nameList)
         widthList = target[0].width.split(',')
         print(widthList)
+        filterList = target[0].is_filter.split(',')
+        print(filterList)
         columns = []
         try:
             columns = [
@@ -438,6 +440,12 @@ def get_columns(request):
                     'width': int(widthList[index]),
                     'scopedSlots': {'customRender': dataIndexList[index]},
                 }
+                if filterList[index] == '1':
+                    i['scopedSlots'] = {
+                      'filterDropdown': 'filterDropdown',
+                      'filterIcon': 'filterIcon',
+                      'customRender': dataIndexList[index],
+                    }
                 columns.append(i)
             a = {
                 'title': 'operation',
@@ -543,7 +551,6 @@ def update_contact_info(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         data = data.get('data')
-
         return update_common_infoDB(data, models.ContactInfo.objects)
 
 
@@ -651,7 +658,7 @@ def batchInputExcel(path, excelType):
             if excelType == 'ProjectInfo':
                 models.ProjectInfo.objects.create(**target)
             if excelType == 'ProjectStatusInfo':
-                if not target['arrival_num']:
+                if not target['arrival_num'] or target['arrival_num']=='':
                     target['arrival_num'] = 0
                 models.ProjectStatusInfo.objects.create(**target)
             if excelType == 'RecruitmentInfo':

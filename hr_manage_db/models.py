@@ -287,6 +287,7 @@ class TableCol(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     width = models.CharField(max_length=100, blank=True, null=True)
     justtest = models.CharField(max_length=100, blank=True, null=True)
+    is_filter = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
